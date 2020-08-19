@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="816" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="927" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e572585d-59bc-4e69-8ea9-7a564692419a" name="Default Changelist" comment="" />
+    <list default="true" id="e572585d-59bc-4e69-8ea9-7a564692419a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/META-INF/xiepodao.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cuoche.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/input_one.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/input_one.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/liu/main/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/main/Demo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/liu/main/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/main/Test.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,11 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7235">
-              <caret line="908" selection-start-line="908" selection-end-line="908" />
+            <state relative-caret-position="-6589">
+              <caret line="778" column="25" lean-forward="true" selection-start-line="778" selection-start-column="25" selection-end-line="778" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -26,11 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/liu/main/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
+            <state relative-caret-position="660">
+              <caret line="31" selection-start-line="31" selection-end-line="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -59,6 +75,9 @@
       <find>carButton1</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -75,8 +94,8 @@
         <option value="$PROJECT_DIR$/src/com/liu/handler/LoginHandler.java" />
         <option value="$PROJECT_DIR$/src/com/liu/handler/LoginViewHandler.java" />
         <option value="$PROJECT_DIR$/src/com/liu/view/LoginView.java" />
-        <option value="$PROJECT_DIR$/src/com/liu/main/Demo.java" />
         <option value="$PROJECT_DIR$/src/com/liu/main/Test.java" />
+        <option value="$PROJECT_DIR$/src/com/liu/main/Demo.java" />
       </list>
     </option>
   </component>
@@ -93,19 +112,18 @@
     <option name="jreName" value="1.8" />
     <option name="vmOptions" value="-DarchetypeCatalog=internal" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="114" />
     <option name="y" value="21" />
     <option name="width" value="1810" />
     <option name="height" value="1057" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -164,13 +182,15 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1597742487064" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../student-manager-gui" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1597825730482" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.runner" />
@@ -264,9 +284,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Demo" />
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.LoginView" />
         <item itemvalue="Application.Heart" />
-        <item itemvalue="Application.Test" />
         <item itemvalue="Application.XiePoDao" />
       </list>
     </recent_temporary>
@@ -287,18 +307,19 @@
       <workItem from="1597394951062" duration="3670000" />
       <workItem from="1597623348262" duration="25007000" />
       <workItem from="1597709989919" duration="22175000" />
+      <workItem from="1597796171076" duration="19857000" />
+      <workItem from="1597826269776" duration="2332000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="132661000" />
+    <option name="totallyTimeSpent" value="154850000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="114" y="21" width="1810" height="1057" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.70238096" visible="true" weight="0.212" />
-      <window_info id="Structure" order="1" sideWeight="0.29761904" side_tool="true" visible="true" weight="0.212" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6987952" visible="true" weight="0.20202559" />
+      <window_info id="Structure" order="1" sideWeight="0.30120483" side_tool="true" visible="true" weight="0.20202559" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -306,8 +327,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.064935066" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.18980478" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.00867679" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -316,7 +337,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.04004329" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.4219089" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -494,8 +515,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7235">
-          <caret line="908" selection-start-line="908" selection-end-line="908" />
+        <state relative-caret-position="-6589">
+          <caret line="778" column="25" lean-forward="true" selection-start-line="778" selection-start-column="25" selection-end-line="778" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -504,8 +525,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/main/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="660">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

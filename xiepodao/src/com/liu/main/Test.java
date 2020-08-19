@@ -18,5 +18,16 @@ public class Test {
             System.out.println(map.size());
         }
 
+        String a = "01";
+        String b ="02";
+        if (a.equals("00")){
+            System.out.println("200没进车");
+        }
+        if (!a.equals("00")&&!b.equals(a)){
+            System.out.println("200进车，但是从下半段走了");
+        }
+
+
+
     }
 }
