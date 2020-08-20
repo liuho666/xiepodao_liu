@@ -158,15 +158,11 @@ public class LoginView extends JFrame{
         return userNameJTextField;
     }
 
-    public void setUserNameJTextField(JTextField userNameJTextField) {
-        this.userNameJTextField = userNameJTextField;
-    }
-
     public JPasswordField getPwdJPasswordField() {
         return pwdJPasswordField;
     }
 
-    public void setPwdJPasswordField(JPasswordField pwdJPasswordField) {
-        this.pwdJPasswordField = pwdJPasswordField;
+    public JFrame getjFrame() {
+        return jFrame;
     }
 }

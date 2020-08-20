@@ -13,8 +13,8 @@ public class Test {
         map.put("b","bbbb");
         map.put("c","cccc");
         map.put("d","dddd");
-
-        if (map.get("2")==null){
+        map.remove("a");
+        if (map.get("a")==null){
             System.out.println(map.size());
         }
 
@@ -26,8 +26,6 @@ public class Test {
         if (!a.equals("00")&&!b.equals(a)){
             System.out.println("200进车，但是从下半段走了");
         }
-
-
 
     }
 }
