@@ -5,25 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e572585d-59bc-4e69-8ea9-7a564692419a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/liu/entity/CarDo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/entity/CarRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/entity/TableDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/handler/AddCarViewHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/handler/CarViewHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/handler/UpdateCarViewHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/service/impl/CarServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/view/AddCarView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/liu/view/UpdateCarView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/liu/view/WarningView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/input_one.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/input_one.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/main/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/main/Demo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/service/CarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/service/CarService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/view/CarView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/view/CarView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/view/ext/CarViewTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/view/ext/CarViewTableModel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,11 +29,35 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/liu/view/CarView.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/liu/view/WarningView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="407">
-              <caret line="139" column="17" selection-start-line="139" selection-start-column="17" selection-end-line="139" selection-end-column="17" />
+            <state relative-caret-position="682">
+              <caret line="34" column="5" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="528">
+              <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTableModel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="62">
+              <caret line="5" column="56" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -80,18 +87,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/liu/service/impl/AdminServiceImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/liu/handler/AddCarViewHandler.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="551">
@@ -104,22 +99,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTable.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/liu/service/impl/CarServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="178" column="29" selection-start-line="178" selection-start-column="29" selection-end-line="178" selection-end-column="29" />
+            <state relative-caret-position="84">
+              <caret line="179" column="19" lean-forward="true" selection-start-line="179" selection-start-column="19" selection-end-line="179" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -140,10 +123,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/liu/view/AddCarView.java">
+        <entry file="file://$PROJECT_DIR$/src/com/liu/view/CarView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="912">
-              <caret line="81" column="21" lean-forward="true" selection-start-line="74" selection-start-column="8" selection-end-line="81" selection-end-column="21" />
+            <state relative-caret-position="255">
+              <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="67" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -219,6 +202,7 @@
         <option value="$PROJECT_DIR$/src/com/liu/handler/CarViewHandler.java" />
         <option value="$PROJECT_DIR$/src/com/liu/service/CarService.java" />
         <option value="$PROJECT_DIR$/src/com/liu/service/impl/CarServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/com/liu/view/WarningView.java" />
       </list>
     </option>
   </component>
@@ -374,7 +358,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1598002315534" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1598003628281" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="F:/lixu/mysql-connector-java-5.1.45-bin.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -501,7 +485,7 @@
       <workItem from="1597826269776" duration="3837000" />
       <workItem from="1597831146785" duration="25014000" />
       <workItem from="1597968442733" duration="10049000" />
-      <workItem from="1597979110104" duration="15101000" />
+      <workItem from="1597979110104" duration="16236000" />
     </task>
     <task id="LOCAL-00001" summary="提交到本地仓库">
       <created>1597828793580</created>
@@ -517,17 +501,24 @@
       <option name="project" value="LOCAL" />
       <updated>1597917626868</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="提交到本地仓库">
+      <created>1598002502189</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1598002502189</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="206519000" />
+    <option name="totallyTimeSpent" value="207654000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.69458985" visible="true" weight="0.19722815" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.69458985" visible="true" weight="0.19722815" />
       <window_info id="Structure" order="1" sideWeight="0.30541012" side_tool="true" weight="0.1715749" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -536,7 +527,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.5" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.11171366" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18763557" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -595,18 +586,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="提交到本地仓库" />
     <option name="LAST_COMMIT_MESSAGE" value="提交到本地仓库" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/liu/service/impl/CarServiceImpl.java</url>
-          <line>194</line>
-          <properties />
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/com/liu/main/TestFlowLayout.java" />
@@ -863,16 +842,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTableModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-26">
-          <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/entity/CarDo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -927,30 +896,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/service/impl/AdminServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
           <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/liu/view/CarView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="139" column="17" selection-start-line="139" selection-start-column="17" selection-end-line="139" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1006,8 +955,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/service/impl/CarServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="178" column="29" selection-start-line="178" selection-start-column="29" selection-end-line="178" selection-end-column="29" />
+        <state relative-caret-position="84">
+          <caret line="179" column="19" lean-forward="true" selection-start-line="179" selection-start-column="19" selection-end-line="179" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTableModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="62">
+          <caret line="5" column="56" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="56" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/liu/view/ext/CarViewTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/liu/view/CarView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="67" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/liu/view/WarningView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="682">
+          <caret line="34" column="5" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
