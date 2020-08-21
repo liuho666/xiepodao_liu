@@ -459,6 +459,13 @@ public class Demo {
                 new CarView();
             }
         });
+        //给菜单栏退出添加点击事件
+        tuichu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
 
         jPanel_center.add(redButton1);
         jPanel_center.add(greenButton1);
@@ -500,6 +507,13 @@ public class Demo {
         //设置最大化
         //jf.setExtendedState(jf.getExtendedState()|JFrame.MAXIMIZED_BOTH );
 
+    }
+    public static void outMessage(byte[]  buffer){
+        try {
+            out.write(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -543,6 +557,43 @@ class socket_con extends Thread {
 }
 
 class input_one extends Thread {
+    /**
+     * 将字节数组转换成十六进制的字符串
+     *
+     * @return
+     */
+    public static String BinaryToHexString(byte[] bytes) {
+        String hexStr = "0123456789ABCDEF";
+        String result = "";
+        String hex = "";
+        for (byte b : bytes) {
+            hex = String.valueOf(hexStr.charAt((b & 0xF0) >> 4));
+            hex += String.valueOf(hexStr.charAt(b & 0x0F));
+            result += hex + " ";
+        }
+        return result;
+    }
+    /**
+     * 将十六进制的字符串转换成字节数组
+     *
+     * @param hexString
+     * @return
+     */
+    public static byte[] hexStrToBinaryStr(String hexString) {
+        hexString = hexString.replaceAll(" ", "");
+        int len = hexString.length();
+        int index = 0;
+        byte[] bytes = new byte[len / 2];
+        while (index < len) {
+
+            String sub = hexString.substring(index, index + 2);
+
+            bytes[index/2] = (byte)Integer.parseInt(sub,16);
+
+            index += 2;
+        }
+        return bytes;
+    }
     // 10进制转换16进制
     public static String dncodeHex(Integer num) {
         String hex = Integer.toHexString(num);
@@ -559,9 +610,14 @@ class input_one extends Thread {
     public void run() {
         while (true) {
             byte[] buffer = new byte[30];
+            byte[] buf = new byte[30];
+            String strReturn;
             try {
                 // 读进buffer
                 int size = Demo.inputStream.read(buffer);
+                int line = 0;
+                //strReturn= BinaryToHexString(buf);
+                //buffer = hexStrToBinaryStr(strReturn);
             } catch (IOException e) {
                 try {
                     Demo.socket.close();
@@ -641,6 +697,10 @@ class input_one extends Thread {
                                     //报警信息状态改变
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                     Demo.carId_top.setText("");
+                                    //控制信号灯
+                                    //byte[] buf= new byte[30];
+                                    //Demo.outMessage(buf);
+
                                 }else{
                                     System.out.println("上半段已进车，请退至等候区等待下次识别！");
                                 }
@@ -1419,7 +1479,7 @@ class cheshan2 extends Thread {
                 }
                 Demo.carButton2.setIcon(new ImageIcon("img//car.png"));
             }else{
-                Demo.carButton2.hide();
+                Demo.carButton1.setVisible(false);
             }
         }
 

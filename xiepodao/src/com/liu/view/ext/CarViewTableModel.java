@@ -22,6 +22,10 @@ public class CarViewTableModel extends DefaultTableModel {
         carViewTableModel.setDataVector(data,colums);
         return carViewTableModel;
     }
+    public static void updateModel(Vector<Vector<Object>> data){
+        carViewTableModel.setDataVector(data,colums);
+
+    }
     public static Vector<String> getColums(){
         return colums;
     }
