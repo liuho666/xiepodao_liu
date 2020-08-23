@@ -2,9 +2,15 @@ package com.liu.view;
 
 import com.liu.entity.CarRequest;
 import com.liu.entity.TableDTO;
+import com.liu.handler.WarnViewHandler;
 import com.liu.service.CarService;
+import com.liu.service.WarnService;
 import com.liu.service.impl.CarServiceImpl;
+import com.liu.service.impl.WarnServiceImpl;
+import com.liu.view.ext.CarViewTable;
 import com.liu.view.ext.CarViewTableModel;
+import com.liu.view.ext.WarnViewTable;
+import com.liu.view.ext.WarnViewTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +22,11 @@ public class WarningView extends JFrame {
     JButton nextBtn = new JButton("下一页");
     private int pageNow = 1;//当前是第几页
     private int pageSize =10;//一页显示多少条数据库记录
-
+   WarnViewTable warnViewTable = new WarnViewTable();
+    private WarnViewHandler warnViewHandler;
     public WarningView(){
         super("报警信息查看");
+        warnViewHandler = new WarnViewHandler(this);
         //内容面板
         Container contentPane = getContentPane();
         //设置中间的Jtable
@@ -28,24 +36,30 @@ public class WarningView extends JFrame {
     }
     private void laoutCenter(Container contentPane) {
         TableDTO dto = getTableDto();
-        CarViewTableModel carViewTableModel = CarViewTableModel.assembleModel(dto.getData());
+        WarnViewTableModel warnViewTableModel = WarnViewTableModel.assembleModel(dto.getData());
         //table 关联model
-        carViewTable.setModel(carViewTableModel);
+        warnViewTable.setModel(warnViewTableModel);
         //添加渲染方式
-        carViewTable.renderRule();
+        warnViewTable.renderRule();
         //显示表格
-        JScrollPane jScrollPane = new JScrollPane(carViewTable);
+        JScrollPane jScrollPane = new JScrollPane(warnViewTable);
         contentPane.add(jScrollPane,BorderLayout.CENTER);
         showPreNext(dto.getTotalCount());
     }
+    private void laoutSouth(Container contentPane) {
+        preBtn.addActionListener(warnViewHandler);
+        nextBtn.addActionListener(warnViewHandler);
+        southPanel.add(preBtn);
+        southPanel.add(nextBtn);
+        contentPane.add(southPanel,BorderLayout.SOUTH);
+    }
     private TableDTO getTableDto() {
-        CarService carService = new CarServiceImpl();
+        WarnService warnService = new WarnServiceImpl();
         CarRequest request = new CarRequest();
         request.setPageNow(pageNow);
         request.setPageSize(pageSize);
-        request.setSearchKey(searchTxt.getText().trim());
-        //request.setSearchKey("");
-        TableDTO tableDTO = carService.retrieveCars(request);
+        request.setSearchKey("");
+        TableDTO tableDTO = warnService.retrieveWarns(request);
         return tableDTO;
     }
     //设置上一页，下一页是否可见
@@ -68,4 +82,11 @@ public class WarningView extends JFrame {
         }
     }
 
+    public int getPageNow() {
+        return pageNow;
+    }
+
+    public void setPageNow(int pageNow) {
+        this.pageNow = pageNow;
+    }
 }
