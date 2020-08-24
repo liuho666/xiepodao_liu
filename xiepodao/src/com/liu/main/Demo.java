@@ -5,6 +5,7 @@ import com.liu.util.DimensionUtil;
 import com.liu.view.CarView;
 import com.liu.view.WarningView;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,6 +68,7 @@ public class Demo {
     static JLabel car_numberJB = null;
     static JLabel carId_top = null;
     static JLabel carId_south = null;
+    static JLabel baojing = null;
     public static void main(String[] agrs) {
         Font font = new Font("黑体", Font.PLAIN, 18);// 创建1个字体实例
 
@@ -78,6 +80,16 @@ public class Demo {
         JPanel jPanel_left=new JPanel();
        //中间中部容器
         Image image=new ImageIcon("img//beijing.png").getImage();
+        JPanel jPanel_centerAll = new JPanel(new BorderLayout());
+        JPanel jPanel_centerBottom = new JPanel(new FlowLayout());
+        jPanel_centerBottom.setBackground(Color.white);
+        jPanel_centerBottom.setPreferredSize(new Dimension(280, 80));
+        baojing = new JLabel();
+        baojing.setText("读卡分站状态:一切正常");
+        baojing.setFont(new Font("黑体",Font.PLAIN,40));
+        baojing.setForeground(Color.green);
+        baojing.setHorizontalAlignment(JLabel.LEFT);
+        jPanel_centerBottom.add(baojing);
         jPanel_center = new BackgroundPanel(image);
         // 设置中部容器空布局，即绝对布局
         jPanel_center.setOpaque(false);
@@ -86,41 +98,43 @@ public class Demo {
         car_numberJB = new JLabel();
         carId_top = new JLabel();
         carId_south = new JLabel();
+        baojing = new JLabel();
         car_numberJB.setText("当前巷道中车辆数量:0");
         car_numberJB.setForeground(Color.red);
-        carId_top.setText("");
+        carId_top.setText("上半段车状态");
         carId_top.setForeground(Color.red);
         carId_south.setForeground(Color.red);
-        carId_south.setText("");
+        carId_south.setText("下半段车状态");
         car_numberJB.setFont(jinggao_font);
         carId_top.setFont(jinggao_font);
         carId_south.setFont(jinggao_font);
+
         car_numberJB.setBounds(50,100,500,50);
-        carId_top.setBounds(50,200,500,50);
-        carId_south.setBounds(50,400,500,50);
+        carId_top.setBounds(50,150,500,50);
+        carId_south.setBounds(50,200,500,50);
         jPanel_center.add(car_numberJB);
         jPanel_center.add(carId_top);
         jPanel_center.add(carId_south);
 
         //在北京图片上放置红绿灯素材
-        redButton1 = MyButton.getGreyButton(1050,60);
-        greenButton1 = MyButton.getGreenButton(1080, 60);
-        yellowButton1 = MyButton.getGreyButton(1110, 60);
-        redButton2 = MyButton.getGreyButton(940, 210);
-        greenButton2 = MyButton.getGreenButton(970, 210);
-        yellowButton2 = MyButton.getGreyButton(1000, 210);
+        redButton1 = MyButton.getGreyButton(1030,55);
+        greenButton1 = MyButton.getGreenButton(1060, 55);
+        yellowButton1 = MyButton.getGreyButton(1090, 55);
+        redButton2 = MyButton.getGreyButton(930, 200);
+        greenButton2 = MyButton.getGreenButton(960, 200);
+        yellowButton2 = MyButton.getGreyButton(990, 200);
         //200 错车上部
-        redButton_200top = MyButton.getGreyButton(725,315);
-        greenButton_200top = MyButton.getGreenButton(755,315);
-        yellowButton_200top = MyButton.getGreyButton(785,315);
+        redButton_200top = MyButton.getGreyButton(700,300);
+        greenButton_200top = MyButton.getGreenButton(730,300);
+        yellowButton_200top = MyButton.getGreyButton(760,300);
         //200处
-        redButton3 = MyButton.getGreyButton(820, 355);
-        greenButton3 = MyButton.getGreenButton(850, 355);
-        yellowButton3 = MyButton.getGreyButton(880, 355);
+        redButton3 = MyButton.getGreyButton(800, 320);
+        greenButton3 = MyButton.getGreenButton(830, 320);
+        yellowButton3 = MyButton.getGreyButton(860, 320);
         //200错车下部
-        redButton_200south = MyButton.getGreyButton(630,425);
-        greenButton_200south = MyButton.getGreenButton(660,425);
-        yellowButton_200south = MyButton.getGreyButton(690,425);
+        redButton_200south = MyButton.getGreyButton(600,375);
+        greenButton_200south = MyButton.getGreenButton(630,375);
+        yellowButton_200south = MyButton.getGreyButton(660,374);
 
 
 
@@ -139,6 +153,37 @@ public class Demo {
 
         carButton1.hide();
         carButton2.hide();
+        //给容器添加红绿灯按钮
+        jPanel_center.add(redButton1);
+        jPanel_center.add(greenButton1);
+        jPanel_center.add(yellowButton1);
+        jPanel_center.add(redButton2);
+        jPanel_center.add(greenButton2);
+        jPanel_center.add(yellowButton2);
+        jPanel_center.add(redButton3);
+        jPanel_center.add(greenButton3);
+        jPanel_center.add(yellowButton3);
+        jPanel_center.add(redButton4);
+        jPanel_center.add(greenButton4);
+        jPanel_center.add(yellowButton4);
+        jPanel_center.add(redButton5);
+        jPanel_center.add(greenButton5);
+        jPanel_center.add(yellowButton5);
+        jPanel_center.add(redButton6);
+        jPanel_center.add(greenButton6);
+        jPanel_center.add(yellowButton6);
+
+        jPanel_center.add(carButton1);
+        jPanel_center.add(carButton2);
+        jPanel_center.add(redButton_200top);
+        jPanel_center.add(greenButton_200top);
+        jPanel_center.add(yellowButton_200top);
+        jPanel_center.add(redButton_200south);
+        jPanel_center.add(greenButton_200south);
+        jPanel_center.add(yellowButton_200south);
+
+        jPanel_centerAll.add(jPanel_center,BorderLayout.CENTER);
+        jPanel_centerAll.add(jPanel_centerBottom,BorderLayout.SOUTH);
         //布局设置边框，左侧，中部容器
         jPanel_left.setBorder(BorderFactory.createBevelBorder(1));
         jPanel_center.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,5));
@@ -237,7 +282,7 @@ public class Demo {
         //左侧布局 选择控制模式
         JPanel left_centre = new JPanel(new BorderLayout());
         left_centre.setBackground(new Color(250, 250, 210));
-        left_centre.setPreferredSize(new Dimension(280, 150));
+        left_centre.setPreferredSize(new Dimension(280, 95));
         JPanel jp_cl_text = new JPanel();
         jp_cl_text.setBackground(Color.white);
         JLabel jl_cb_text = new JLabel("设置控制模式");
@@ -262,7 +307,7 @@ public class Demo {
         Font font_shoudong = new Font("黑体", Font.PLAIN, 15);// 创建1个字体实例
         c2.setFont(font_shoudong);
         c2.setBackground(new Color(250, 250, 210));
-        c1.setSelected(true);
+        //c1.setSelected(true);
         ButtonGroup group = new ButtonGroup(); // 创建一个按钮组
         group.add(c1);
         group.add(c2);
@@ -291,11 +336,15 @@ public class Demo {
                     if (c1.isSelected()) {
                         JOptionPane.showMessageDialog(null, "选择了自动控制模式");
                         /*方法*/
+                        input_one is = new input_one();
+                        is.start();
                     }
                     // 手动模式的单选框被选择
                     if (c2.isSelected()) {
                         JOptionPane.showMessageDialog(null, "选择了手动控制模式");
                         /*方法*/
+
+
                 }
             }
         });
@@ -303,7 +352,7 @@ public class Demo {
         //左侧布局手动控制模式详细信息
         JPanel left_bottom = new JPanel(new BorderLayout());
         left_bottom.setBackground(new Color(250, 250, 210));
-        left_bottom.setPreferredSize(new Dimension(280, 695));
+        left_bottom.setPreferredSize(new Dimension(280, 650));
         JPanel jp_sd_text = new JPanel();
         jp_sd_text.setBackground(Color.white);
         JLabel jl_sd_text = new JLabel("手动控制模式");
@@ -316,16 +365,25 @@ public class Demo {
         jp_sd_text.add(jl_sd_text);
         left_bottom.add(jp_sd_text,BorderLayout.NORTH);
         // 灯
-        JPanel jp_deng = new JPanel(new FlowLayout());
-        JPanel jp_deng_170 = getDengjPanel();
-        JPanel jp_deng_185 = getDengjPanel();
-        JPanel jp_deng_200 = getDengjPanel();
-        JPanel jp_deng_215 = getDengjPanel();
-        JPanel jp_deng_230 = getDengjPanel();
-        JPanel jp_deng_245 = getDengjPanel();
+        JPanel jp_deng = new JPanel(new GridLayout(8, 1));
+        jp_deng.setBackground(new Color(250, 250, 210));
+        JPanel jp_deng_170 = getDengjPanel("-170米处");
+        JPanel jp_deng_185 = getDengjPanel("-185米处");
+        JPanel jp_deng_200top = getDengjPanel("-200米北处");
+        JPanel jp_deng_200 = getDengjPanel("-200米处");
+        JPanel jp_deng_200south = getDengjPanel("-200米南处");
+        JPanel jp_deng_215 = getDengjPanel("-215米处");
+        JPanel jp_deng_230 = getDengjPanel("-230米处");
+        JPanel jp_deng_245 = getDengjPanel("-245米处");
 
         jp_deng.add(jp_deng_170);
         jp_deng.add(jp_deng_185);
+        jp_deng.add(jp_deng_200top);
+        jp_deng.add(jp_deng_200);
+        jp_deng.add(jp_deng_200south);
+        jp_deng.add(jp_deng_215);
+        jp_deng.add(jp_deng_230);
+        jp_deng.add(jp_deng_245);
         left_bottom.add(jp_deng);
         jPanel_left.add(left_bottom,BorderLayout.SOUTH);
 
@@ -336,7 +394,7 @@ public class Demo {
         jPanel_center.add(button1);
 
         jf.add(jPanel_left,BorderLayout.WEST);
-        jf.add(jPanel_center,BorderLayout.CENTER);
+        jf.add(jPanel_centerAll,BorderLayout.CENTER);
 
         // 底部logo
         JPanel jp_logo = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -395,33 +453,8 @@ public class Demo {
             }
         });
 
-        jPanel_center.add(redButton1);
-        jPanel_center.add(greenButton1);
-        jPanel_center.add(yellowButton1);
-        jPanel_center.add(redButton2);
-        jPanel_center.add(greenButton2);
-        jPanel_center.add(yellowButton2);
-        jPanel_center.add(redButton3);
-        jPanel_center.add(greenButton3);
-        jPanel_center.add(yellowButton3);
-        jPanel_center.add(redButton4);
-        jPanel_center.add(greenButton4);
-        jPanel_center.add(yellowButton4);
-        jPanel_center.add(redButton5);
-        jPanel_center.add(greenButton5);
-        jPanel_center.add(yellowButton5);
-        jPanel_center.add(redButton6);
-        jPanel_center.add(greenButton6);
-        jPanel_center.add(yellowButton6);
 
-        jPanel_center.add(carButton1);
-        jPanel_center.add(carButton2);
-        jPanel_center.add(redButton_200top);
-        jPanel_center.add(greenButton_200top);
-        jPanel_center.add(yellowButton_200top);
-        jPanel_center.add(redButton_200south);
-        jPanel_center.add(greenButton_200south);
-        jPanel_center.add(yellowButton_200south);
+
         //根据屏幕大小设置主界面大小
         jf.setBounds(DimensionUtil.getBounds());
         //设置窗体完全充满整个屏幕的可见大小
@@ -436,16 +469,16 @@ public class Demo {
         //jf.setExtendedState(jf.getExtendedState()|JFrame.MAXIMIZED_BOTH );
 
     }
-
-    private static JPanel getDengjPanel() {
+    //手动控制灯的组件
+    private static JPanel getDengjPanel(String string) {
         //灯的第一行
-        JPanel jp_deng_170 = new JPanel(new GridLayout(2, 1));
+        JPanel jp_deng_170 = new JPanel(new GridLayout(1, 3));
         JPanel jp_deng_top = new JPanel(new FlowLayout(FlowLayout.CENTER));
         // 第一行灯的第一个
         JPanel jp_deng_top_left = new JPanel(new BorderLayout());
         // 提示字
         JPanel jp_yaliguodi = new JPanel();
-        JLabel jl_yaliguodi = new JLabel("斜坡道-170米");
+        JLabel jl_yaliguodi = new JLabel(string);
         jp_yaliguodi.add(jl_yaliguodi);
         jp_deng_top.add(jp_yaliguodi, BorderLayout.NORTH);
         // 灯
@@ -500,15 +533,13 @@ public class Demo {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (flag_yaligao == true) {
-                    jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
-                    jl_yaliguogao_btn.setText("亮");
-                    flag_yaligao = false;
-                    /*方法*/
-                } else {
                     jl_yaliguogao_deng.setIcon(new ImageIcon("img//mie.png"));
                     jl_yaliguogao_btn.setText("灭");
+                    flag_yaligao = false;
+                } else {
+                    jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
+                    jl_yaliguogao_btn.setText("亮");
                     flag_yaligao = true;
-                    /*方法*/
                 }
             }
         });
@@ -518,9 +549,10 @@ public class Demo {
 
         jp_deng_top.add(jp_deng_top_right);
         jp_deng_170.add(jp_deng_top);
-        jp_deng_170.setPreferredSize(new Dimension(280,100));
         return jp_deng_170;
     }
+
+
 
     public static void outMessage(byte[]  buffer){
         try {
@@ -545,7 +577,7 @@ class socket_con extends Thread {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            JOptionPane.showMessageDialog(null, "连接成功");
+            JOptionPane.showMessageDialog(null, "连接成功,请选择控制模式！");
             System.out.println("连接成功！");
             Demo.jb_jianting.setText("已连接");
             Demo.jb_jianting.setForeground(Color.green);
@@ -564,8 +596,8 @@ class socket_con extends Thread {
                 e1.printStackTrace();
             }
             //开启交通灯控制线程
-            input_one is = new input_one();
-            is.start();
+            //input_one is = new input_one();
+            //is.start();
         }
     }
 }
@@ -624,14 +656,10 @@ class input_one extends Thread {
     public void run() {
         while (true) {
             byte[] buffer = new byte[30];
-            byte[] buf = new byte[30];
-            String strReturn;
             try {
                 // 读进buffer
                 int size = Demo.inputStream.read(buffer);
                 int line = 0;
-                //strReturn= BinaryToHexString(buf);
-                //buffer = hexStrToBinaryStr(strReturn);
             } catch (IOException e) {
                 try {
                     Demo.socket.close();
@@ -644,10 +672,7 @@ class input_one extends Thread {
             }
 
             System.out.println(Arrays.toString(buffer));
-            //错车线程关闭
-           /* cuoche c = new cuoche();
-            c.start();*/
-
+            //错车线程
             cheshan1 a = new cheshan1();
             a.start();
             cheshan2 b = new cheshan2();
@@ -1426,16 +1451,6 @@ class input_one extends Thread {
 
 }
 class cheshan1 extends Thread {
-    // 10进制转换16进制
-    public static String dncodeHex(Integer num) {
-        String hex = Integer.toHexString(num);
-        return hex;
-    }
-    // 判断字符串是不是全部为数字
-    public static boolean isNumber(String str) {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        return pattern.matcher(str).matches();
-    }
     @Override
     public void run() {
        while (2>1){
@@ -1464,16 +1479,6 @@ class cheshan1 extends Thread {
 }
 
 class cheshan2 extends Thread {
-    // 10进制转换16进制
-    public static String dncodeHex(Integer num) {
-        String hex = Integer.toHexString(num);
-        return hex;
-    }
-    // 判断字符串是不是全部为数字
-    public static boolean isNumber(String str) {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        return pattern.matcher(str).matches();
-    }
     @Override
     public void run() {
         while (2>1){
@@ -1493,10 +1498,9 @@ class cheshan2 extends Thread {
                 }
                 Demo.carButton2.setIcon(new ImageIcon("img//car.png"));
             }else{
-                Demo.carButton1.setVisible(false);
+                Demo.carButton2.setVisible(false);
             }
         }
-
     }
 
 }

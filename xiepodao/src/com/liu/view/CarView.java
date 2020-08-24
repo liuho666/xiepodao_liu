@@ -6,6 +6,7 @@ import com.liu.entity.TableDTO;
 import com.liu.handler.CarViewHandler;
 import com.liu.service.CarService;
 import com.liu.service.impl.CarServiceImpl;
+import com.liu.util.DimensionUtil;
 import com.liu.view.ext.CarViewTable;
 import com.liu.view.ext.CarViewTableModel;
 
@@ -31,6 +32,8 @@ public class CarView extends JFrame {
         super("车辆信息管控");
         //内容面板
         Container contentPane = getContentPane();
+        Rectangle bounds = DimensionUtil.getBounds();
+        pageSize = Math.floorDiv(bounds.height,35);
         carViewHandler= new CarViewHandler(this);
         //放置北边的组件
         layoutNorth(contentPane);

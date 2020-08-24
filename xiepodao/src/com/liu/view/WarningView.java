@@ -7,6 +7,7 @@ import com.liu.service.CarService;
 import com.liu.service.WarnService;
 import com.liu.service.impl.CarServiceImpl;
 import com.liu.service.impl.WarnServiceImpl;
+import com.liu.util.DimensionUtil;
 import com.liu.view.ext.CarViewTable;
 import com.liu.view.ext.CarViewTableModel;
 import com.liu.view.ext.WarnViewTable;
@@ -26,13 +27,31 @@ public class WarningView extends JFrame {
     private WarnViewHandler warnViewHandler;
     public WarningView(){
         super("报警信息查看");
-        warnViewHandler = new WarnViewHandler(this);
+
         //内容面板
         Container contentPane = getContentPane();
+        Rectangle bounds = DimensionUtil.getBounds();
+        pageSize = Math.floorDiv(bounds.height,35);
+
+        warnViewHandler = new WarnViewHandler(this);
         //设置中间的Jtable
         laoutCenter(contentPane);
         //放置南边的组件
         laoutSouth(contentPane);
+
+
+        //自定义图标
+        setIconImage(new ImageIcon("img//logo.png").getImage());
+
+        //根据屏幕大小设置主界面大小
+        //setBounds(DimensionUtil.getBounds());
+        //设置窗体完全充满整个屏幕的可见大小
+        //setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1000, 800);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setResizable(true);
+        setVisible(true);
     }
     private void laoutCenter(Container contentPane) {
         TableDTO dto = getTableDto();

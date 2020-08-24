@@ -6,7 +6,7 @@ public class DBUtil {
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/xiepodao_car?useUnicode=true&characterEncoding=utf-8";
     private static final String USER_NAME = "root";
-    private static final String PWD = "ROOT";
+    private static final String PWD = "321";
 
     static {
         try {
