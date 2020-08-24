@@ -95,7 +95,7 @@ public class Demo {
         // 设置中部容器空布局，即绝对布局
         jPanel_center.setOpaque(false);
         jPanel_center.setLayout(null);
-        Font jinggao_font = new Font("黑体", Font.PLAIN, 25);
+        Font jinggao_font = new Font("黑体", Font.PLAIN, 30);
         car_numberJB = new JLabel();
         carId_top = new JLabel();
         carId_south = new JLabel();
@@ -111,8 +111,8 @@ public class Demo {
         carId_south.setFont(jinggao_font);
 
         car_numberJB.setBounds(50,100,500,50);
-        carId_top.setBounds(50,150,500,50);
-        carId_south.setBounds(50,200,500,50);
+        carId_top.setBounds(50,180,500,50);
+        carId_south.setBounds(50,260,500,50);
         jPanel_center.add(car_numberJB);
         jPanel_center.add(carId_top);
         jPanel_center.add(carId_south);
@@ -121,33 +121,33 @@ public class Demo {
         redButton1 = MyButton.getGreyButton(1030,55);
         greenButton1 = MyButton.getGreenButton(1060, 55);
         yellowButton1 = MyButton.getGreyButton(1090, 55);
-        redButton2 = MyButton.getGreyButton(930, 200);
-        greenButton2 = MyButton.getGreenButton(960, 200);
-        yellowButton2 = MyButton.getGreyButton(990, 200);
+        redButton2 = MyButton.getGreyButton(930, 185);
+        greenButton2 = MyButton.getGreenButton(960, 185);
+        yellowButton2 = MyButton.getGreyButton(990, 185);
         //200 错车上部
-        redButton_200top = MyButton.getGreyButton(700,300);
-        greenButton_200top = MyButton.getGreenButton(730,300);
-        yellowButton_200top = MyButton.getGreyButton(760,300);
+        redButton_200top = MyButton.getGreyButton(725,280);
+        greenButton_200top = MyButton.getGreenButton(755,280);
+        yellowButton_200top = MyButton.getGreyButton(785,280);
         //200处
-        redButton3 = MyButton.getGreyButton(800, 320);
-        greenButton3 = MyButton.getGreenButton(830, 320);
-        yellowButton3 = MyButton.getGreyButton(860, 320);
+        redButton3 = MyButton.getGreyButton(805, 315);
+        greenButton3 = MyButton.getGreenButton(835, 315);
+        yellowButton3 = MyButton.getGreyButton(865, 315);
         //200错车下部
-        redButton_200south = MyButton.getGreyButton(600,375);
-        greenButton_200south = MyButton.getGreenButton(630,375);
-        yellowButton_200south = MyButton.getGreyButton(660,374);
+        redButton_200south = MyButton.getGreyButton(635,375);
+        greenButton_200south = MyButton.getGreenButton(665,375);
+        yellowButton_200south = MyButton.getGreyButton(695,375);
 
 
 
-        redButton4 = MyButton.getGreyButton(690, 503);
-        greenButton4 = MyButton.getGreenButton(720, 503);
-        yellowButton4 = MyButton.getGreyButton(750, 503);
-        redButton5 = MyButton.getGreyButton(560, 650);
-        greenButton5 = MyButton.getGreenButton(590, 650);
-        yellowButton5 = MyButton.getGreyButton(620, 650);
-        redButton6 = MyButton.getGreyButton(430, 797);
-        greenButton6 = MyButton.getGreenButton(460, 797);
-        yellowButton6 = MyButton.getGreyButton(490, 797);
+        redButton4 = MyButton.getGreyButton(690, 450);
+        greenButton4 = MyButton.getGreenButton(720, 450);
+        yellowButton4 = MyButton.getGreyButton(750, 450);
+        redButton5 = MyButton.getGreyButton(560, 580);
+        greenButton5 = MyButton.getGreenButton(590, 580);
+        yellowButton5 = MyButton.getGreyButton(620, 580);
+        redButton6 = MyButton.getGreyButton(430, 710);
+        greenButton6 = MyButton.getGreenButton(460, 710);
+        yellowButton6 = MyButton.getGreyButton(490, 710);
 
         carButton1 = MyButton.getCarButton(880, 150);
         carButton2 = MyButton.getCarButton(510, 580);
@@ -352,6 +352,7 @@ public class Demo {
 
         //左侧布局手动控制模式详细信息
         JPanel left_bottom = new JPanel(new BorderLayout());
+
         left_bottom.setBackground(new Color(250, 250, 210));
         left_bottom.setPreferredSize(new Dimension(280, 650));
         JPanel jp_sd_text = new JPanel();
@@ -473,26 +474,27 @@ public class Demo {
     //手动控制灯的组件
     private static JPanel getDengjPanel(String string) {
         //灯的第一行
-        JPanel jp_deng_170 = new JPanel(new GridLayout(1, 3));
-        JPanel jp_deng_top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel jp_deng_top = new JPanel(new GridLayout(1,3));
+        jp_deng_top.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
+        jp_deng_top.setBackground(new Color(250, 250, 210));
         // 第一行灯的第一个
         JPanel jp_deng_top_left = new JPanel(new BorderLayout());
         // 提示字
-        JPanel jp_yaliguodi = new JPanel();
         JLabel jl_yaliguodi = new JLabel(string);
-        jp_yaliguodi.add(jl_yaliguodi);
-        jp_deng_top.add(jp_yaliguodi, BorderLayout.NORTH);
+        jl_yaliguodi.setHorizontalAlignment(JLabel.CENTER);
+        jp_deng_top.add(jl_yaliguodi);
+        jl_yaliguodi.setAlignmentX(Component.CENTER_ALIGNMENT);
         // 灯
-        JPanel jp_yaliguodi_deng = new JPanel();
+       JPanel jp_yaliguodi_deng = new JPanel();
+        jp_yaliguodi_deng.setBackground(new Color(250, 250, 210));
         JLabel jl_yaliguodi_deng = new JLabel();
-        jl_yaliguodi_deng.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
+        jl_yaliguodi_deng.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
         jl_yaliguodi_deng.setIcon(new ImageIcon("img//hong.png"));
-
-
         jp_yaliguodi_deng.add(jl_yaliguodi_deng);
         jp_deng_top_left.add(jp_yaliguodi_deng, BorderLayout.CENTER);
         // 按键
-        JPanel jp_yaliguodi_btn = new JPanel();
+       JPanel jp_yaliguodi_btn = new JPanel();
+        jp_yaliguodi_btn.setBackground(new Color(250, 250, 210));
         JButton jl_yaliguodi_btn = new JButton("亮");
         jl_yaliguodi_btn.setBackground(Color.white);
         jl_yaliguodi_btn.addActionListener(new ActionListener() {
@@ -510,7 +512,6 @@ public class Demo {
                 }
             }
         });
-
         jp_yaliguodi_btn.add(jl_yaliguodi_btn);
         jp_deng_top_left.add(jp_yaliguodi_btn, BorderLayout.SOUTH);
         jp_deng_top.add(jp_deng_top_left);
@@ -519,16 +520,16 @@ public class Demo {
         JPanel jp_deng_top_right = new JPanel(new BorderLayout());
         // 灯
         JPanel jp_yaliguogao_deng = new JPanel();
+        jp_yaliguogao_deng.setBackground(new Color(250, 250, 210));
         JLabel jl_yaliguogao_deng = new JLabel();
-        jl_yaliguogao_deng.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
+        jl_yaliguogao_deng.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
         jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
         jp_yaliguogao_deng.add(jl_yaliguogao_deng);
         jp_deng_top_right.add(jp_yaliguogao_deng, BorderLayout.CENTER);
         // 按键
         JPanel jp_yaliguogao_btn = new JPanel();
+        jp_yaliguogao_btn.setBackground(new Color(250, 250, 210));
         JButton jl_yaliguogao_btn = new JButton("亮");
-
-
         jl_yaliguogao_btn.addActionListener(new ActionListener() {
             boolean flag_yaligao = true;
             @Override
@@ -549,8 +550,24 @@ public class Demo {
         jp_deng_top_right.add(jp_yaliguogao_btn, BorderLayout.SOUTH);
 
         jp_deng_top.add(jp_deng_top_right);
-        jp_deng_170.add(jp_deng_top);
-        return jp_deng_170;
+        return jp_deng_top;
+    }
+
+    public static JPanel getDeng(String height){
+        JPanel jPanel_deng = new JPanel(new GridLayout(1,3));
+        JLabel jl_height = new JLabel(height);
+        jPanel_deng.add(jl_height);
+        JButton jbShouRed_170 = new JButton();
+        jbShouRed_170.setIcon(new ImageIcon("img//hong.png"));
+        jbShouRed_170.setBackground(new Color(238, 238, 238));
+        jbShouRed_170.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
+        JButton jbShouGreen_170 = new JButton();
+        jbShouGreen_170.setIcon(new ImageIcon("img//lv.png"));
+        jbShouGreen_170.setBackground(new Color(238, 238, 238));
+        jbShouGreen_170.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
+        jPanel_deng.add(jbShouRed_170);
+        jPanel_deng.add(jbShouGreen_170);
+        return jPanel_deng;
     }
 
 
