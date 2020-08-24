@@ -3,6 +3,7 @@ package com.liu.main;
 import com.liu.components.MyButton;
 import com.liu.util.DimensionUtil;
 import com.liu.view.CarView;
+import com.liu.view.WarningView;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import javax.swing.*;
@@ -109,17 +110,17 @@ public class Demo {
         greenButton2 = MyButton.getGreenButton(970, 210);
         yellowButton2 = MyButton.getGreyButton(1000, 210);
         //200 错车上部
-        redButton_200top = MyButton.getGreyButton(735,315);
-        greenButton_200top = MyButton.getGreenButton(765,315);
-        yellowButton_200top = MyButton.getGreyButton(795,315);
+        redButton_200top = MyButton.getGreyButton(725,315);
+        greenButton_200top = MyButton.getGreenButton(755,315);
+        yellowButton_200top = MyButton.getGreyButton(785,315);
         //200处
         redButton3 = MyButton.getGreyButton(820, 355);
         greenButton3 = MyButton.getGreenButton(850, 355);
         yellowButton3 = MyButton.getGreyButton(880, 355);
         //200错车下部
-        redButton_200south = MyButton.getGreyButton(640,425);
-        greenButton_200south = MyButton.getGreenButton(670,425);
-        yellowButton_200south = MyButton.getGreyButton(700,425);
+        redButton_200south = MyButton.getGreyButton(630,425);
+        greenButton_200south = MyButton.getGreenButton(660,425);
+        yellowButton_200south = MyButton.getGreyButton(690,425);
 
 
 
@@ -314,98 +315,19 @@ public class Demo {
 
         jp_sd_text.add(jl_sd_text);
         left_bottom.add(jp_sd_text,BorderLayout.NORTH);
-        //灯的第一行
         // 灯
-        JPanel jp_deng = new JPanel(new GridLayout(2, 1));
-        // 灯的第一行
-        JPanel jp_deng_top = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        // 第一行灯的第一个
-        JPanel jp_deng_top_left = new JPanel(new BorderLayout());
-        // 提示字
-        JPanel jp_yaliguodi = new JPanel();
-        JLabel jl_yaliguodi = new JLabel("斜坡道-170米");
-        jp_yaliguodi.add(jl_yaliguodi);
-        jp_deng_top.add(jp_yaliguodi, BorderLayout.NORTH);
-        // 灯
-        JPanel jp_yaliguodi_deng = new JPanel();
-        JLabel jl_yaliguodi_deng = new JLabel();
-        jl_yaliguodi_deng.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
-        jl_yaliguodi_deng.setIcon(new ImageIcon("img//hong.png"));
+        JPanel jp_deng = new JPanel(new FlowLayout());
+        JPanel jp_deng_170 = getDengjPanel();
+        JPanel jp_deng_185 = getDengjPanel();
+        JPanel jp_deng_200 = getDengjPanel();
+        JPanel jp_deng_215 = getDengjPanel();
+        JPanel jp_deng_230 = getDengjPanel();
+        JPanel jp_deng_245 = getDengjPanel();
 
-
-        jp_yaliguodi_deng.add(jl_yaliguodi_deng);
-        jp_deng_top_left.add(jp_yaliguodi_deng, BorderLayout.CENTER);
-        // 按键
-        JPanel jp_yaliguodi_btn = new JPanel();
-        JButton jl_yaliguodi_btn = new JButton("亮");
-//		Font font_yalidi = new Font("黑体", Font.PLAIN, 6);// 创建1个字体实例
-//		jl_yaliguodi_btn.setFont(font_yalidi);
-//		jl_yaliguodi_btn.setPreferredSize(new Dimension(40,20));
-        jl_yaliguodi_btn.setBackground(Color.white);
-        jl_yaliguodi_btn.addActionListener(new ActionListener() {
-            boolean flag_yalidi = true;
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (flag_yalidi == true) {
-                    jl_yaliguodi_deng.setIcon(new ImageIcon("img//mie.png"));
-                    jl_yaliguodi_btn.setText("灭");
-                    flag_yalidi = false;
-                } else {
-                    jl_yaliguodi_deng.setIcon(new ImageIcon("img//hong.png"));
-                    jl_yaliguodi_btn.setText("亮");
-                    flag_yalidi = true;
-                }
-            }
-        });
-
-        jp_yaliguodi_btn.add(jl_yaliguodi_btn);
-        jp_deng_top_left.add(jp_yaliguodi_btn, BorderLayout.SOUTH);
-        jp_deng_top.add(jp_deng_top_left);
-
-        left_bottom.add(jp_deng_top);
-
-        jPanel_left.add(left_bottom,BorderLayout.SOUTH);
-        // 第一行灯的第二个
-        JPanel jp_deng_top_right = new JPanel(new BorderLayout());
-        // 灯
-        JPanel jp_yaliguogao_deng = new JPanel();
-        JLabel jl_yaliguogao_deng = new JLabel();
-        jl_yaliguogao_deng.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
-        jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
-        jp_yaliguogao_deng.add(jl_yaliguogao_deng);
-        jp_deng_top_right.add(jp_yaliguogao_deng, BorderLayout.CENTER);
-        // 按键
-        JPanel jp_yaliguogao_btn = new JPanel();
-        JButton jl_yaliguogao_btn = new JButton("亮");
-
-
-        jl_yaliguogao_btn.addActionListener(new ActionListener() {
-            boolean flag_yaligao = true;
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (flag_yaligao == true) {
-                    jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
-                    jl_yaliguogao_btn.setText("亮");
-                    flag_yaligao = false;
-                    /*方法*/
-                } else {
-                    jl_yaliguogao_deng.setIcon(new ImageIcon("img//mie.png"));
-                    jl_yaliguogao_btn.setText("灭");
-                    flag_yaligao = true;
-                    /*方法*/
-                }
-
-            }
-        });
-        jl_yaliguogao_btn.setBackground(Color.white);
-        jp_yaliguogao_btn.add(jl_yaliguogao_btn);
-        jp_deng_top_right.add(jp_yaliguogao_btn, BorderLayout.SOUTH);
-
-        jp_deng_top.add(jp_deng_top_right);
-        jp_deng.add(jp_deng_top);
-
+        jp_deng.add(jp_deng_170);
+        jp_deng.add(jp_deng_185);
         left_bottom.add(jp_deng);
-
+        jPanel_left.add(left_bottom,BorderLayout.SOUTH);
 
 
 
@@ -459,6 +381,12 @@ public class Demo {
                 new CarView();
             }
         });
+        baojingMenueItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new WarningView();
+            }
+        });
         //给菜单栏退出添加点击事件
         tuichu.addActionListener(new ActionListener() {
             @Override
@@ -508,6 +436,92 @@ public class Demo {
         //jf.setExtendedState(jf.getExtendedState()|JFrame.MAXIMIZED_BOTH );
 
     }
+
+    private static JPanel getDengjPanel() {
+        //灯的第一行
+        JPanel jp_deng_170 = new JPanel(new GridLayout(2, 1));
+        JPanel jp_deng_top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // 第一行灯的第一个
+        JPanel jp_deng_top_left = new JPanel(new BorderLayout());
+        // 提示字
+        JPanel jp_yaliguodi = new JPanel();
+        JLabel jl_yaliguodi = new JLabel("斜坡道-170米");
+        jp_yaliguodi.add(jl_yaliguodi);
+        jp_deng_top.add(jp_yaliguodi, BorderLayout.NORTH);
+        // 灯
+        JPanel jp_yaliguodi_deng = new JPanel();
+        JLabel jl_yaliguodi_deng = new JLabel();
+        jl_yaliguodi_deng.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
+        jl_yaliguodi_deng.setIcon(new ImageIcon("img//hong.png"));
+
+
+        jp_yaliguodi_deng.add(jl_yaliguodi_deng);
+        jp_deng_top_left.add(jp_yaliguodi_deng, BorderLayout.CENTER);
+        // 按键
+        JPanel jp_yaliguodi_btn = new JPanel();
+        JButton jl_yaliguodi_btn = new JButton("亮");
+        jl_yaliguodi_btn.setBackground(Color.white);
+        jl_yaliguodi_btn.addActionListener(new ActionListener() {
+            boolean flag_yalidi = true;
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (flag_yalidi == true) {
+                    jl_yaliguodi_deng.setIcon(new ImageIcon("img//mie.png"));
+                    jl_yaliguodi_btn.setText("灭");
+                    flag_yalidi = false;
+                } else {
+                    jl_yaliguodi_deng.setIcon(new ImageIcon("img//hong.png"));
+                    jl_yaliguodi_btn.setText("亮");
+                    flag_yalidi = true;
+                }
+            }
+        });
+
+        jp_yaliguodi_btn.add(jl_yaliguodi_btn);
+        jp_deng_top_left.add(jp_yaliguodi_btn, BorderLayout.SOUTH);
+        jp_deng_top.add(jp_deng_top_left);
+
+        // 第一行灯的第二个
+        JPanel jp_deng_top_right = new JPanel(new BorderLayout());
+        // 灯
+        JPanel jp_yaliguogao_deng = new JPanel();
+        JLabel jl_yaliguogao_deng = new JLabel();
+        jl_yaliguogao_deng.setBorder(BorderFactory.createLineBorder(new Color(238, 238, 238)));
+        jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
+        jp_yaliguogao_deng.add(jl_yaliguogao_deng);
+        jp_deng_top_right.add(jp_yaliguogao_deng, BorderLayout.CENTER);
+        // 按键
+        JPanel jp_yaliguogao_btn = new JPanel();
+        JButton jl_yaliguogao_btn = new JButton("亮");
+
+
+        jl_yaliguogao_btn.addActionListener(new ActionListener() {
+            boolean flag_yaligao = true;
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (flag_yaligao == true) {
+                    jl_yaliguogao_deng.setIcon(new ImageIcon("img//lv.png"));
+                    jl_yaliguogao_btn.setText("亮");
+                    flag_yaligao = false;
+                    /*方法*/
+                } else {
+                    jl_yaliguogao_deng.setIcon(new ImageIcon("img//mie.png"));
+                    jl_yaliguogao_btn.setText("灭");
+                    flag_yaligao = true;
+                    /*方法*/
+                }
+            }
+        });
+        jl_yaliguogao_btn.setBackground(Color.white);
+        jp_yaliguogao_btn.add(jl_yaliguogao_btn);
+        jp_deng_top_right.add(jp_yaliguogao_btn, BorderLayout.SOUTH);
+
+        jp_deng_top.add(jp_deng_top_right);
+        jp_deng_170.add(jp_deng_top);
+        jp_deng_170.setPreferredSize(new Dimension(280,100));
+        return jp_deng_170;
+    }
+
     public static void outMessage(byte[]  buffer){
         try {
             out.write(buffer);
