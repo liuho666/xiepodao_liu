@@ -71,7 +71,6 @@ public class Demo {
     static JLabel baojing = null;
     public static void main(String[] agrs) {
         Font font = new Font("黑体", Font.PLAIN, 18);// 创建1个字体实例
-
         JFrame jf=new JFrame("井下斜坡道");    //创建Frame窗口
         jf.setIconImage(new ImageIcon("img//logo.png").getImage());
         jf.setSize(400,200);
@@ -81,7 +80,8 @@ public class Demo {
        //中间中部容器
         Image image=new ImageIcon("img//beijing.png").getImage();
         JPanel jPanel_centerAll = new JPanel(new BorderLayout());
-        JPanel jPanel_centerBottom = new JPanel(new FlowLayout());
+        JPanel jPanel_centerBottom = new JPanel();
+        jPanel_centerBottom.setLayout(new BoxLayout(jPanel_centerBottom, BoxLayout.Y_AXIS));
         jPanel_centerBottom.setBackground(Color.white);
         jPanel_centerBottom.setPreferredSize(new Dimension(280, 80));
         baojing = new JLabel();
@@ -90,6 +90,7 @@ public class Demo {
         baojing.setForeground(Color.green);
         baojing.setHorizontalAlignment(JLabel.LEFT);
         jPanel_centerBottom.add(baojing);
+        baojing.setAlignmentX(Component.LEFT_ALIGNMENT);
         jPanel_center = new BackgroundPanel(image);
         // 设置中部容器空布局，即绝对布局
         jPanel_center.setOpaque(false);

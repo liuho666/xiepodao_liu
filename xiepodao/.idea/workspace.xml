@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="1046" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="1047" />
     <bookmark url="file://$PROJECT_DIR$/src/com/liu/service/WarnService.java" line="6" />
-    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="369" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="370" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e572585d-59bc-4e69-8ea9-7a564692419a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/cheshan2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/input_one.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/input_one.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/liu/main/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/main/Demo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/util/DBUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/util/DBUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/view/CarView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/view/CarView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/view/WarningView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/view/WarningView.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,8 +35,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="85" column="66" selection-start-line="85" selection-start-column="66" selection-end-line="85" selection-end-column="66" />
+            <state relative-caret-position="555">
+              <caret line="91" column="41" selection-start-line="91" selection-start-column="41" selection-end-line="91" selection-end-column="41" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -248,7 +238,7 @@
     <option name="jreName" value="1.8" />
     <option name="vmOptions" value="-DarchetypeCatalog=internal" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="91" />
     <option name="y" value="39" />
     <option name="width" value="1678" />
@@ -514,7 +504,7 @@
       <workItem from="1597979110104" duration="16236000" />
       <workItem from="1598069964034" duration="12308000" />
       <workItem from="1598168170548" duration="1462000" />
-      <workItem from="1598254504607" duration="5514000" />
+      <workItem from="1598254504607" duration="5757000" />
     </task>
     <task id="LOCAL-00001" summary="提交到本地仓库">
       <created>1597828793580</created>
@@ -537,17 +527,24 @@
       <option name="project" value="LOCAL" />
       <updated>1598002502189</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="提交到本地仓库">
+      <created>1598261531263</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1598261531263</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="239067000" />
+    <option name="totallyTimeSpent" value="239310000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="91" y="39" width="1678" height="1100" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.69359756" visible="true" weight="0.2843016" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.69359756" visible="true" weight="0.24520256" />
       <window_info id="Structure" order="1" sideWeight="0.30640244" side_tool="true" weight="0.2580429" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -556,7 +553,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23395444" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2451193" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18763557" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -566,7 +563,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.065155804" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.06832298" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.06724512" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -1011,8 +1008,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="85" column="66" selection-start-line="85" selection-start-column="66" selection-end-line="85" selection-end-column="66" />
+        <state relative-caret-position="555">
+          <caret line="91" column="41" selection-start-line="91" selection-start-column="41" selection-end-line="91" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
