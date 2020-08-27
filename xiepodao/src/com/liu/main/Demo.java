@@ -166,8 +166,8 @@ public class Demo {
         carButton1 = MyButton.getCarButton1(730, 40);
         carButton2 = MyButton.getCarButton2(302, 352);
 
-        //carButton1.hide();
-        //carButton2.hide();
+        carButton1.hide();
+        carButton2.hide();
         //给容器添加红绿灯按钮
         jPanel_center.add(redButton1);
         jPanel_center.add(greenButton1);
@@ -1200,18 +1200,18 @@ class input_one extends Thread {
                 e.printStackTrace();
             }
             System.out.println(Arrays.toString(buffer));
-            if(dncodeHex((int) buffer[1]).equals(Demo.chongfu1)
-                    &&dncodeHex((int) buffer[2]).equals(Demo.chongfu2)
-                    &&dncodeHex((int) buffer[3]).equals(Demo.chongfu3)){
+            if(dncodeHex((int) buffer[4]).equals(Demo.chongfu1)
+                    &&dncodeHex((int) buffer[5]).equals(Demo.chongfu2)
+                    &&dncodeHex((int) buffer[6]).equals(Demo.chongfu3)){
                 System.out.println("重复的buffer");
                 continue;
             }
             if(Demo.success_back == 1){
                 System.out.println("进入了自动线程");
-                if (buffer[0] == -1) {
+                if (buffer[0] == 03) {
                     //如果是 170 185 分站
-                    if (buffer[1] == 1 || buffer[1] == 2) {
-                        String car = dncodeHex((int) buffer[3]);
+                    if (buffer[4] == 11 || buffer[4] == 12) {
+                        String car = dncodeHex((int) buffer[6]);
                         //先判断200口是否进车
                         if (Demo.car_200.equals("00")){//200没进车
                             if (Demo.map.size() == 2) {//巷道里有两辆车，肯定是出车，判断是上半段车还是下半段车
@@ -1317,9 +1317,9 @@ class input_one extends Thread {
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                         Demo.carId_south.setText("车辆编号"+car+"从上半段出车");
                                     } else{//上半段进车 下半段有车 记录进车识别标识
-                                        Demo.map.put(1, dncodeHex((int) buffer[3]));
+                                        Demo.map.put(1, dncodeHex((int) buffer[6]));
                                         //判断是170和185
-                                        if (buffer[1] == 1) {//如果是170 170黄灯亮，185，200 200上红灯
+                                        if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200 200上红灯
                                             Demo.redButton1.setIcon(Demo.GrayIcon);
                                             Demo.greenButton1.setIcon(Demo.GrayIcon);
                                             Demo.yellowButton1.setIcon(Demo.YellowIcon);
@@ -1369,9 +1369,9 @@ class input_one extends Thread {
                                 }
                             } else {//肯定是进车 map.size()==0
                                 //进车 记录进车识别标识
-                                Demo.map.put(1, dncodeHex((int) buffer[3]));
+                                Demo.map.put(1, dncodeHex((int) buffer[6]));
                                 //判断是170和185
-                                if (buffer[1] == 1) {//如果是170 170黄灯亮，185，200 200上红灯 200下绿灯
+                                if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200 200上红灯 200下绿灯
                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                     Demo.greenButton1.setIcon(Demo.GrayIcon);
                                     Demo.yellowButton1.setIcon(Demo.YellowIcon);
@@ -1444,9 +1444,9 @@ class input_one extends Thread {
                                     }
                                 } else {//进车
                                     //进车 记录进车识别标识
-                                    Demo.map.put(1, dncodeHex((int) buffer[3]));
+                                    Demo.map.put(1, dncodeHex((int) buffer[6]));
                                     //判断是170和185
-                                    if (buffer[1] == 1) {//如果是170 170黄灯亮，185，200上红灯200下绿灯，200黄灯
+                                    if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200上红灯200下绿灯，200黄灯
                                         Demo.redButton1.setIcon(Demo.GrayIcon);
                                         Demo.greenButton1.setIcon(Demo.GrayIcon);
                                         Demo.yellowButton1.setIcon(Demo.YellowIcon);
@@ -1541,11 +1541,11 @@ class input_one extends Thread {
                                 }
                             }
                         }
-                    } else if (buffer[1] == 3) {//如果是200分站
-                        if (buffer[2] == 1) {
+                    } else if (buffer[4] == 13) {//如果是200分站
+                        if (buffer[5] == 1) {
                             //carnumber_one 记录上半段数字
                             //map中key1记录上半段进车的信息
-                            Demo.carnumber_one = dncodeHex((int) buffer[3]);
+                            Demo.carnumber_one = dncodeHex((int) buffer[6]);
                             if (Demo.car_200.equals("00")){//说明200没进车
                                 if (Demo.map.size() == 2) {//有两辆车，说明需要错车
                                     if (Demo.carnumber_one.equals(Demo.map.get(2))) {//检测到下边来的车，说明上边的车在避让，让200下变绿灯
@@ -1616,10 +1616,10 @@ class input_one extends Thread {
                                 }
                             }
 
-                        } else if (buffer[2] == 2) {
+                        } else if (buffer[5] == 2) {
                             if (Demo.map.size() == 2) {//有两辆车，说明需要错车
                                 //记录当前在2的车辆信息，提示哪辆车在错车
-                                Demo.cuoche_200 = dncodeHex((int) buffer[3]);
+                                Demo.cuoche_200 = dncodeHex((int) buffer[6]);
                                 if (Demo.cuoche_flag == false){//当前没有车在避让
                                     if (Demo.cuoche_200.equals(Demo.map.get(1))) {//先检测到上半段车进入到避让处,200上变绿灯，让下半段车先行
                                         Demo.redButton_200top.setIcon(Demo.GrayIcon);
@@ -1649,8 +1649,8 @@ class input_one extends Thread {
                                 }
 
                             }
-                        } else if (buffer[2] == 3) {
-                            Demo.carnumber_two = dncodeHex((int) buffer[3]);
+                        } else if (buffer[5] == 3) {
+                            Demo.carnumber_two = dncodeHex((int) buffer[6]);
                             if (Demo.car_200.equals("00")){//说明200没进车
                                 if (Demo.map.size() == 2) {//说明通道内有两辆车，需要错车
                                     if (Demo.carnumber_two.equals(Demo.map.get(1))) {//如果是上边来的车，说明下边的车在避让，200上变绿灯
@@ -1717,8 +1717,8 @@ class input_one extends Thread {
                                 }
                             }
 
-                        } else if (buffer[2] == 4) {
-                            String car = dncodeHex((int) buffer[3]);
+                        } else if (buffer[5] == 4) {
+                            String car = dncodeHex((int) buffer[6]);
                             if (Demo.map.size()==2){//巷道里有两辆车，肯定是出车,不需要变灯
                                 if (car.equals(Demo.map.get(1)) || car.equals(Demo.map.get(2))){
                                     if (car.equals(Demo.map.get(1))){//上半段车出车，移除key1
@@ -1823,7 +1823,7 @@ class input_one extends Thread {
                                     System.out.println("已进车，请退至等候区等待下次识别");
                                 }
                             }else {//map.size == 0，肯定是进车，全部变红灯，只有200的车能行驶，同时记录200标识
-                                Demo.car_200 =dncodeHex((int) buffer[3]);
+                                Demo.car_200 =dncodeHex((int) buffer[6]);
                                 Demo.redButton1.setIcon(Demo.RedIcon);
                                 Demo.greenButton1.setIcon(Demo.GrayIcon);
                                 Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -1857,8 +1857,8 @@ class input_one extends Thread {
                         } else {
                             System.out.println("200分站错误的rfid站号码");
                         }
-                    } else if (buffer[1] == 4 || buffer[1] == 5 || buffer[1] == 6) {
-                        String car = dncodeHex((int) buffer[3]);
+                    } else if (buffer[4] == 14 || buffer[4] == 15 || buffer[4] == 16) {
+                        String car = dncodeHex((int) buffer[6]);
                         if(Demo.car_200.equals("00")){//200没进车或者是已经出去
                             if (Demo.map.size()==2){//肯定是出车
                                 if (car.equals(Demo.map.get(1)) || car.equals(Demo.map.get(2))){
@@ -1958,9 +1958,9 @@ class input_one extends Thread {
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                         Demo.carId_top.setText("车辆编号"+car+"从下半段出车");
                                     }else{//下半段进车，上半段有车
-                                        Demo.map.put(2, dncodeHex((int) buffer[3]));
+                                        Demo.map.put(2, dncodeHex((int) buffer[6]));
                                         //判断是215、230、245
-                                        if (buffer[1] == 4) {//如果是215 215黄灯亮，200 ,230，245红灯
+                                        if (buffer[4] == 14) {//如果是215 215黄灯亮，200 ,230，245红灯
                                             Demo.carnumber_two_falg = true;
                                             Demo.redButton3.setIcon(Demo.RedIcon);
                                             Demo.greenButton3.setIcon(Demo.GrayIcon);
@@ -1986,7 +1986,7 @@ class input_one extends Thread {
                                             //提示信息
                                             Demo.car_numberJB.setText("当前巷道中车辆数量:02");
                                             Demo.carId_south.setText("车辆编号"+car+"从-215处进车");
-                                        } else if (buffer[1] == 5) {//如果是230 230黄灯亮 200,215,245红灯
+                                        } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200,215,245红灯
                                             Demo.carnumber_two_falg = true;
                                             Demo.redButton3.setIcon(Demo.RedIcon);
                                             Demo.greenButton3.setIcon(Demo.GrayIcon);
@@ -2043,9 +2043,9 @@ class input_one extends Thread {
                                     }
                                 }
                             } else {//肯定是进车 记录进车识别标识 map.size()==0
-                                Demo.map.put(2, dncodeHex((int) buffer[3]));
+                                Demo.map.put(2, dncodeHex((int) buffer[6]));
                                 //判断是215、230、245
-                                if (buffer[1] == 4) {//如果是215 215黄灯亮，200，230，245红灯
+                                if (buffer[4] == 14) {//如果是215 215黄灯亮，200，230，245红灯
                                     Demo.carnumber_two_falg = true;
                                     Demo.redButton3.setIcon(Demo.RedIcon);
                                     Demo.greenButton3.setIcon(Demo.GrayIcon);
@@ -2071,7 +2071,7 @@ class input_one extends Thread {
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                     Demo.carId_south.setText("车辆编号"+car+"从-215处进车");
-                                } else if (buffer[1] == 5) {//如果是230 230黄灯亮 200，215,245红灯
+                                } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200，215,245红灯
                                     Demo.carnumber_two_falg = true;
                                     Demo.redButton3.setIcon(Demo.RedIcon);
                                     Demo.greenButton3.setIcon(Demo.GrayIcon);
@@ -2154,9 +2154,9 @@ class input_one extends Thread {
                                         System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
                                     }
                                 }else{//进车
-                                    Demo.map.put(2, dncodeHex((int) buffer[3]));
+                                    Demo.map.put(2, dncodeHex((int) buffer[6]));
                                     //判断是215、230、245
-                                    if (buffer[1] == 4) {//如果是215 215黄灯亮，200黄灯 ，230，245红灯
+                                    if (buffer[4] == 14) {//如果是215 215黄灯亮，200黄灯 ，230，245红灯
                                         Demo.redButton3.setIcon(Demo.GrayIcon);
                                         Demo.greenButton3.setIcon(Demo.GrayIcon);
                                         Demo.yellowButton3.setIcon(Demo.YellowIcon);
@@ -2183,7 +2183,7 @@ class input_one extends Thread {
                                         Demo.carId_south.setText("车辆编号"+car+"从-215处进车");
                                         //车闪标识
                                         Demo.carnumber_two_falg = true;
-                                    } else if (buffer[1] == 5) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
+                                    } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
                                         Demo.redButton3.setIcon(Demo.GrayIcon);
                                         Demo.greenButton3.setIcon(Demo.GrayIcon);
                                         Demo.yellowButton3.setIcon(Demo.YellowIcon);
@@ -2298,9 +2298,9 @@ class input_one extends Thread {
 
                     }
                 }
-                Demo.chongfu1 = dncodeHex((int) buffer[1]);
-                Demo.chongfu2 = dncodeHex((int) buffer[2]);
-                Demo.chongfu3= dncodeHex((int) buffer[3]);
+                Demo.chongfu1 = dncodeHex((int) buffer[4]);
+                Demo.chongfu2 = dncodeHex((int) buffer[5]);
+                Demo.chongfu3= dncodeHex((int) buffer[6]);
             }
             }
     }
