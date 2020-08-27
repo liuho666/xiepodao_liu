@@ -163,10 +163,10 @@ public class Demo {
         greenButton6 = MyButton.getGreenButton(460, 725);
         yellowButton6 = MyButton.getGreyButton(490, 725);
 
-        carButton1 = MyButton.getCarButton(855, 150);
-        carButton2 = MyButton.getCarButton(302, 352);
+        carButton1 = MyButton.getCarButton1(730, 40);
+        carButton2 = MyButton.getCarButton2(302, 352);
 
-        carButton1.hide();
+        //carButton1.hide();
         //carButton2.hide();
         //给容器添加红绿灯按钮
         jPanel_center.add(redButton1);
@@ -2314,7 +2314,7 @@ class cheshan1 extends Thread {
            System.out.println("车闪1");
            if(Demo.carnumber_one_falg ==true){
                Demo.carButton1.setVisible(true);
-               Demo.carButton1.setIcon(new ImageIcon("img//car.png"));
+               Demo.carButton1.setIcon(new ImageIcon("img//car1.png"));
                try {
                    sleep(500);
                } catch (InterruptedException e) {
@@ -2326,7 +2326,7 @@ class cheshan1 extends Thread {
                } catch (InterruptedException e) {
                    e.printStackTrace();
                }
-               Demo.carButton1.setIcon(new ImageIcon("img//car.png"));
+               Demo.carButton1.setIcon(new ImageIcon("img//car1.png"));
            }else {
                Demo.carButton1.setVisible(false);
            }
@@ -2344,7 +2344,7 @@ class cheshan2 extends Thread {
             System.out.println("车闪2");
             if (Demo.carnumber_two_falg == true){
                 Demo.carButton2.setVisible(true);
-                Demo.carButton2.setIcon(new ImageIcon("img//car.png"));
+                Demo.carButton2.setIcon(new ImageIcon("img//car2.png"));
                 try {
                     sleep(500);
                 } catch (InterruptedException e) {
@@ -2356,7 +2356,7 @@ class cheshan2 extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Demo.carButton2.setIcon(new ImageIcon("img//car.png"));
+                Demo.carButton2.setIcon(new ImageIcon("img//car2.png"));
             }else{
                 Demo.carButton2.setVisible(false);
             }
