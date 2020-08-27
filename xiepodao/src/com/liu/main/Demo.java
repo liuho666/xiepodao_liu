@@ -59,8 +59,8 @@ public class Demo {
     static JButton redButton_200south = null;
     static JButton greenButton_200south = null;
     static JButton yellowButton_200south = null;
-    static JButton carButton1 = null;
-    static JButton carButton2 = null;
+    static JLabel carButton1 = null;
+    static JLabel carButton2 = null;
     static JPanel jPanel_center = null;
     static ImageIcon RedIcon = new ImageIcon("img//hong.png");
     static ImageIcon GreenIcon = new ImageIcon("img//lv.png");
@@ -164,10 +164,10 @@ public class Demo {
         yellowButton6 = MyButton.getGreyButton(490, 725);
 
         carButton1 = MyButton.getCarButton(855, 150);
-        carButton2 = MyButton.getCarButton(450, 580);
+        carButton2 = MyButton.getCarButton(302, 352);
 
         carButton1.hide();
-        carButton2.hide();
+        //carButton2.hide();
         //给容器添加红绿灯按钮
         jPanel_center.add(redButton1);
         jPanel_center.add(greenButton1);
@@ -196,6 +196,7 @@ public class Demo {
         jPanel_center.add(redButton_200south);
         jPanel_center.add(greenButton_200south);
         jPanel_center.add(yellowButton_200south);
+
 
         jPanel_centerAll.add(jPanel_center,BorderLayout.CENTER);
         jPanel_centerAll.add(jPanel_centerBottom,BorderLayout.SOUTH);
