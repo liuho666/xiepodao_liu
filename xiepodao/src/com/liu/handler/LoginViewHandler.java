@@ -1,6 +1,7 @@
 package com.liu.handler;
 
 import com.liu.entity.AdminDO;
+import com.liu.main.Demo;
 import com.liu.service.AdminService;
 import com.liu.service.impl.AdminServiceImpl;
 import com.liu.view.LoginView;
@@ -45,6 +46,8 @@ public class LoginViewHandler extends KeyAdapter implements ActionListener {
         boolean flag = adminService.validateAdmin(adminDO);
         if (flag) {
             System.out.println("登录成功！");
+            Demo.mainpage();
+            loginView.getjFrame().dispose();
         } else {
             JOptionPane.showMessageDialog(loginView.getjFrame(), "用户名密码错误");
         }

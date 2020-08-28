@@ -29,7 +29,7 @@ public class LoginView extends JFrame{
     SpringLayout formLayout = new SpringLayout();
     private JPanel formPanel = new JPanel(formLayout);
 
-    private JFrame jFrame = new JFrame("学生成绩管理系统");
+    private JFrame jFrame = new JFrame("威程科技车辆管控系统");
 
     // 托盘
     private TrayIcon trayIcon;
