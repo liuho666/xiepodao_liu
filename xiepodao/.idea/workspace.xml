@@ -6,23 +6,15 @@
     </artifacts-to-build>
   </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="2462" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="2466" />
     <bookmark url="file://$PROJECT_DIR$/src/com/liu/service/WarnService.java" line="6" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e572585d-59bc-4e69-8ea9-7a564692419a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/handler/LoginViewHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/handler/LoginViewHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/Demo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/main/socket_con.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/xiepodao/com/liu/view/LoginView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/xiepodao/com/liu/view/LoginView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/handler/LoginViewHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/handler/LoginViewHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/liu/main/Demo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/main/Demo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/liu/view/LoginView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/liu/view/LoginView.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -65,16 +57,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
+            <state relative-caret-position="128">
+              <caret line="257" column="50" selection-start-line="257" selection-start-column="50" selection-end-line="257" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3152#3153#0" expanded="true" />
+                <element signature="e#3178#3179#0" expanded="true" />
                 <element signature="e#44296#44297#0" expanded="true" />
                 <element signature="e#44349#44350#0" expanded="true" />
                 <element signature="e#44522#44523#0" expanded="true" />
                 <element signature="e#44579#44580#0" expanded="true" />
-                <element signature="e#45688#45689#0" expanded="true" />
-                <element signature="e#45732#45733#0" expanded="true" />
                 <element signature="e#44769#44770#0" expanded="true" />
                 <element signature="e#44823#44824#0" expanded="true" />
               </folding>
@@ -108,9 +100,11 @@
       <find>success_back</find>
       <find>buffer</find>
       <find>手动</find>
-      <find>提交</find>
       <find>报警</find>
       <find>-170米处</find>
+      <find>网络连接</find>
+      <find>carbutton</find>
+      <find>提交</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -181,11 +175,11 @@
     <option name="jreName" value="1.8" />
     <option name="vmOptions" value="-DarchetypeCatalog=internal" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="548" />
-    <option name="y" value="42" />
-    <option name="width" value="1375" />
-    <option name="height" value="1057" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="378" />
+    <option name="y" value="64" />
+    <option name="width" value="1454" />
+    <option name="height" value="874" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -271,15 +265,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="com" type="462c0819:PsiDirectoryNode" />
               <item name="liu" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="Demo.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </path>
-            <path>
-              <item name="xiepodao" type="b2602c69:ProjectViewProjectNode" />
-              <item name="xiepodao" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="liu" type="462c0819:PsiDirectoryNode" />
               <item name="service" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -328,7 +313,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1598607837005" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1598611060496" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="F:/liu_repository/java_swing/dongfanglaoying" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -361,7 +346,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.LoginView">
+  <component name="RunManager" selected="Application.Demo">
     <configuration name="Demo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.liu.main.Demo" />
       <module name="xiepodao" />
@@ -429,8 +414,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.LoginView" />
         <item itemvalue="Application.Demo" />
+        <item itemvalue="Application.LoginView" />
         <item itemvalue="Application.Test" />
         <item itemvalue="Application.Heart" />
         <item itemvalue="Application.XiePoDao" />
@@ -468,7 +453,7 @@
       <workItem from="1598348272530" duration="101000" />
       <workItem from="1598400832478" duration="22321000" />
       <workItem from="1598487607165" duration="24813000" />
-      <workItem from="1598573846521" duration="17011000" />
+      <workItem from="1598573846521" duration="20218000" />
     </task>
     <task id="LOCAL-00001" summary="提交到本地仓库">
       <created>1597828793580</created>
@@ -540,17 +525,23 @@
       <option name="project" value="LOCAL" />
       <updated>1598520839134</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="提交到本地仓库">
+      <created>1598608030896</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1598608030896</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="323342000" />
+    <option name="totallyTimeSpent" value="326549000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="378" y="64" width="1454" height="874" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.69359756" visible="true" weight="0.13859275" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.69359756" visible="true" weight="0.18651363" />
       <window_info id="Structure" order="1" sideWeight="0.30640244" side_tool="true" weight="0.2580429" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -559,7 +550,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.40130153" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.19459459" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18668252" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -569,7 +560,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.065155804" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.345987" />
+      <window_info anchor="bottom" id="Messages" order="12" visible="true" weight="0.3445946" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -1037,16 +1028,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="175" lean-forward="true" selection-start-line="175" selection-end-line="175" />
+        <state relative-caret-position="128">
+          <caret line="257" column="50" selection-start-line="257" selection-start-column="50" selection-end-line="257" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3152#3153#0" expanded="true" />
+            <element signature="e#3178#3179#0" expanded="true" />
             <element signature="e#44296#44297#0" expanded="true" />
             <element signature="e#44349#44350#0" expanded="true" />
             <element signature="e#44522#44523#0" expanded="true" />
             <element signature="e#44579#44580#0" expanded="true" />
-            <element signature="e#45688#45689#0" expanded="true" />
-            <element signature="e#45732#45733#0" expanded="true" />
             <element signature="e#44769#44770#0" expanded="true" />
             <element signature="e#44823#44824#0" expanded="true" />
           </folding>

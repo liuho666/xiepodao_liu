@@ -81,9 +81,9 @@ public class Demo {
     static String chongfu2 = "00";
     static String chongfu3 = "00";
     static byte[] buf = new byte[11];
-   /* public static void main(String[] agrs) {
+    public static void main(String[] agrs) {
         mainpage();
-    }*/
+    }
    public static  void  IpPage(){
             JFrame IpJframe = new JFrame();
             JPanel left_top = new JPanel(new BorderLayout());
@@ -93,7 +93,7 @@ public class Demo {
             left_top_text.setBackground(Color.white);
             JLabel jl_left_top_text = new JLabel("连接主站IP");
             JLabel jl_text = new JLabel();
-            Font font3 = new Font("黑体", Font.PLAIN, 16);// 创建1个字体实例
+            Font font3 = new Font("黑体", Font.PLAIN, 20);// 创建1个字体实例
             jl_left_top_text.setFont(font3);
             jl_text.setPreferredSize(new Dimension(21, 19));
             jl_text.setIcon(new ImageIcon("img//sanjiao.png"));
@@ -169,7 +169,7 @@ public class Demo {
                 }
             });
             IpJframe.add(left_top);
-       IpJframe.setSize(600,400);
+       IpJframe.setSize(400,250);
        IpJframe.setLocationRelativeTo(null);// 居中展示
             IpJframe.setVisible(true);
    }
@@ -189,7 +189,7 @@ public class Demo {
             JPanel jPanel_centerBottom = new JPanel();
             jPanel_centerBottom.setLayout(new BoxLayout(jPanel_centerBottom, BoxLayout.Y_AXIS));
             jPanel_centerBottom.setBackground(Color.white);
-            jPanel_centerBottom.setPreferredSize(new Dimension(280, 80));
+            jPanel_centerBottom.setPreferredSize(new Dimension(280, 50));
             baojing = new JLabel();
             baojing.setText("读卡分站状态:一切正常");
             baojing.setFont(new Font("黑体",Font.PLAIN,40));
@@ -227,9 +227,9 @@ public class Demo {
             redButton1 = MyButton.getGreyButton(1030,55);
             greenButton1 = MyButton.getGreenButton(1060, 55);
             yellowButton1 = MyButton.getGreyButton(1090, 55);
-            redButton2 = MyButton.getGreyButton(930, 190);
-            greenButton2 = MyButton.getGreenButton(960, 190);
-            yellowButton2 = MyButton.getGreyButton(990, 190);
+            redButton2 = MyButton.getGreyButton(936, 190);
+            greenButton2 = MyButton.getGreenButton(966, 190);
+            yellowButton2 = MyButton.getGreyButton(996, 190);
             //200 错车上部
             redButton_200top = MyButton.getGreyButton(730,280);
             greenButton_200top = MyButton.getGreenButton(760,280);
@@ -244,9 +244,9 @@ public class Demo {
             yellowButton_200south = MyButton.getGreyButton(700,385);
 
 
-            redButton4 = MyButton.getGreyButton(690, 460);
-            greenButton4 = MyButton.getGreenButton(720, 460);
-            yellowButton4 = MyButton.getGreyButton(750, 460);
+            redButton4 = MyButton.getGreyButton(685, 458);
+            greenButton4 = MyButton.getGreenButton(715, 458);
+            yellowButton4 = MyButton.getGreyButton(745, 458);
             redButton5 = MyButton.getGreyButton(560, 590);
             greenButton5 = MyButton.getGreenButton(590, 590);
             yellowButton5 = MyButton.getGreyButton(620, 590);
@@ -254,7 +254,7 @@ public class Demo {
             greenButton6 = MyButton.getGreenButton(460, 725);
             yellowButton6 = MyButton.getGreyButton(490, 725);
 
-            carButton1 = MyButton.getCarButton1(730, 40);
+            carButton1 = MyButton.getCarButton1(732, 40);
             carButton2 = MyButton.getCarButton2(302, 352);
 
             carButton1.hide();
@@ -392,7 +392,7 @@ public class Demo {
             //左侧布局 选择控制模式
             JPanel left_centre = new JPanel(new BorderLayout());
             left_centre.setBackground(new Color(250, 250, 210));
-            left_centre.setPreferredSize(new Dimension(280, 95));
+            left_centre.setPreferredSize(new Dimension(280, 140));
             JPanel jp_cl_text = new JPanel();
             jp_cl_text.setBackground(Color.white);
             JLabel jl_cb_text = new JLabel("设置控制模式");
@@ -500,7 +500,7 @@ public class Demo {
             JPanel left_bottom = new JPanel(new BorderLayout());
 
             left_bottom.setBackground(new Color(250, 250, 210));
-            left_bottom.setPreferredSize(new Dimension(280, 650));
+            left_bottom.setPreferredSize(new Dimension(280, 720));
             JPanel jp_sd_text = new JPanel();
             jp_sd_text.setBackground(Color.white);
             JLabel jl_sd_text = new JLabel("手动控制模式");
@@ -1060,7 +1060,11 @@ public class Demo {
             ip_lianjie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IpPage();
+                if (Demo.socket!=null){
+                    JOptionPane.showMessageDialog(null, "网络已连接，无需再次连接！");
+                }else{
+                    IpPage();
+                }
             }
         });
 
