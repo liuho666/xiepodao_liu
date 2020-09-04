@@ -6,13 +6,20 @@ import com.liu.view.CarView;
 import com.liu.view.WarningView;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
+
 
 public class Demo {
 
@@ -30,6 +37,14 @@ public class Demo {
     static boolean red_215 = true;
     static boolean red_230 = true;
     static boolean red_245 = true;
+    static JButton jbDeng_170 = null;
+    static JButton jbDeng_185 = null;
+    static JButton jbDeng_200top = null;
+    static JButton jbDeng_200 = null;
+    static JButton jbDeng_200south  = null;
+    static JButton jbDeng_215 = null;
+    static JButton jbDeng_230 = null;
+    static JButton jbDeng_245 = null;
     static java.io.InputStream inputStream = null;
     static java.io.OutputStream out = null;
     static JButton redButton1 = null;
@@ -59,6 +74,7 @@ public class Demo {
     static JLabel carButton1 = null;
     static JLabel carButton2 = null;
     static JPanel jPanel_center = null;
+    static ImageIcon BigRedIcon = new ImageIcon("img//hong_big.png");
     static ImageIcon RedIcon = new ImageIcon("img//hong.png");
     static ImageIcon GreenIcon = new ImageIcon("img//lv.png");
     static ImageIcon GrayIcon = new ImageIcon("img//mie.png");
@@ -81,7 +97,11 @@ public class Demo {
     static String chongfu2 = "00";
     static String chongfu3 = "00";
     static byte[] buf = new byte[11];
+    static String text = "--请选择--";
+    static File file;
+    static byte[] buffer_send = new byte[13];
     public static void main(String[] agrs) {
+
         mainpage();
     }
    public static  void  IpPage(){
@@ -137,7 +157,7 @@ public class Demo {
             // =========================开始监听===============================
             JPanel jp_server_bt = new JPanel(new FlowLayout(FlowLayout.CENTER));
             jp_server_bt.setBackground(new Color(250, 250, 210));
-            jb_jianting = new JButton("连接机器人");
+            jb_jianting = new JButton("连接控制分站");
             jb_jianting.setBackground(Color.white);
             jb_jianting.setForeground(Color.red);
             jp_server_bt.add(jb_jianting);
@@ -173,9 +193,142 @@ public class Demo {
        IpJframe.setLocationRelativeTo(null);// 居中展示
             IpJframe.setVisible(true);
    }
+    //固件升级程序
+   public static void shengjiPage(){
+       buffer_send[0] = (byte) 0x08;
+       buffer_send[1] = (byte) 0x00;
+       buffer_send[2] = (byte) 0x00;
+       buffer_send[3] = (byte) 0x00;
+       buffer_send[4] = (byte) 0x63;
+       try {
+           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       JFrame SjJframe = new JFrame();
+       JPanel AllJpanel = new JPanel(new BorderLayout());
+       JPanel WjJpanel = new JPanel();
+       JPanel SendJanel = new JPanel();
+       //选择文件
+       JTextField textField = new JTextField(20);
+       JButton button = new JButton("选择");
+       WjJpanel.add(new JLabel("文件"));
+       WjJpanel.add(textField);
+       WjJpanel.add(button);
+       button.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               JFileChooser chooser = new JFileChooser();
+               //FileNameExtensionFilter:文件名后缀过滤器
+               FileNameExtensionFilter filter = new FileNameExtensionFilter("升级文件","bin","jpg","png");
+               chooser.setFileFilter(filter);
+               //显示对话框
+               int ret = chooser.showOpenDialog(SjJframe);
+               //获取用户选择的结果
+               if (ret==JFileChooser.APPROVE_OPTION){
+                   //结果为：已经存在的一个文件
+                    file = chooser.getSelectedFile();
+                   textField.setText(file.getAbsolutePath());
+               }
+           }
+       });
+       JLabel label1=new JLabel("请选择分站：");    //创建标签
+       JComboBox cmb=new JComboBox();    //创建JComboBox
+       cmb.addItem("--请选择--");    //向下拉列表中添加一项
+       cmb.addItem("170分站");
+       cmb.addItem("185分站");
+       cmb.addItem("200分站");
+       cmb.addItem("215分站");
+       cmb.addItem("230分站");
+       cmb.addItem("245分站");
+
+       // 添加下拉框事件监听器
+        cmb.addItemListener(new ItemListener() {
+         @Override
+         public void itemStateChanged(ItemEvent e) {
+             if (e.getStateChange() == ItemEvent.SELECTED) {
+                 // 选择的下拉框选项
+                  text = (String) cmb.getSelectedItem();
+                 if (text.equals("170分站")){
+                     buffer_send[5] = (byte) 0x0B;
+                 }else if (text.equals("185分站")){
+                     buffer_send[5] = (byte) 0x0C;
+                 }else if (text.equals("200分站")){
+                     buffer_send[5] = (byte) 0x0D;
+                 }else if (text.equals("215分站")){
+                     buffer_send[5] = (byte) 0x0E;
+                 }else if(text.equals("230分站")){
+                     buffer_send[5] = (byte) 0x0F;
+                 }else if(text.equals("245分站")){
+                     buffer_send[5] = (byte) 0x10;
+                 }
+             }
+         }
+     });
+       JButton shengji = new JButton("升级程序");
+       shengji.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               if (Demo.socket==null){
+                   JOptionPane.showMessageDialog(null, "请先进行网络连接！");
+               }else{
+                   if (textField.getText().equals("")){
+                       JOptionPane.showMessageDialog(null, "请选择文件！");
+                   }else{
+                       if (text.equals("--请选择--")){
+                           JOptionPane.showMessageDialog(null, "请选择读卡分站！");
+                       }else{
+                           buffer_send[6] = (byte) 0x01;
+                           buffer_send[7] = (byte) 0x02;
+                           buffer_send[8] = (byte) 0x03;
+                           buffer_send[9] = (byte) 0x04;
+                           buffer_send[10] = (byte) 0x05;
+                           buffer_send[11] = (byte) 0x06;
+                           buffer_send[12] = (byte) 0x07;
+                           outMessage(buffer_send);
+                       }
+                   }
+
+               }
+
+           }
+       });
+       SendJanel.add(label1);
+       SendJanel.add(cmb);
+       SendJanel.add(shengji);
+
+
+
+       //下拉框添加点击事件
+
+
+       AllJpanel.add(WjJpanel,BorderLayout.NORTH);
+       AllJpanel.add(SendJanel,BorderLayout.CENTER);
+       SjJframe.add(AllJpanel);
+       SjJframe.setSize(400,250);
+       SjJframe.setLocationRelativeTo(null);// 居中展示
+       SjJframe.setVisible(true);
+   }
+   //字节数组转成16进制
+    public static String byteToHex(byte b){
+        String hex = Integer.toHexString(b & 0xFF);
+        if(hex.length() < 2){
+            hex = "0" + hex;
+        }
+        return hex;
+    }
+    //int 转换为byte
+    public static byte[] intToByteArray(int i) {
+        byte[] result = new byte[4];
+        result[0] = (byte)((i >> 24) & 0xFF);
+        result[1] = (byte)((i >> 16) & 0xFF);
+        result[2] = (byte)((i >> 8) & 0xFF);
+        result[3] = (byte)(i & 0xFF);
+        return result;
+    }
+
 
     public static void mainpage(){
-
             Font font = new Font("黑体", Font.PLAIN, 18);// 创建1个字体实例
             JFrame jf=new JFrame("");    //创建Frame窗口
             jf.setIconImage(new ImageIcon("img//logo.png").getImage());
@@ -191,12 +344,12 @@ public class Demo {
             jPanel_centerBottom.setBackground(Color.white);
             jPanel_centerBottom.setPreferredSize(new Dimension(280, 50));
             baojing = new JLabel();
-            baojing.setText("读卡分站状态:一切正常");
-            baojing.setFont(new Font("黑体",Font.PLAIN,40));
+            baojing.setText("读卡分站状态:正常");
+            baojing.setFont(new Font("黑体",Font.PLAIN,32));
             baojing.setForeground(Color.green);
-            baojing.setHorizontalAlignment(JLabel.LEFT);
+            baojing.setHorizontalAlignment(JLabel.CENTER);
             jPanel_centerBottom.add(baojing);
-            baojing.setAlignmentX(Component.LEFT_ALIGNMENT);
+            baojing.setAlignmentX(Component.CENTER_ALIGNMENT);
             jPanel_center = new BackgroundPanel(image);
             // 设置中部容器空布局，即绝对布局
             jPanel_center.setOpaque(false);
@@ -384,17 +537,13 @@ public class Demo {
                     }
                 }
             });
-
             jPanel_left.add(left_top,BorderLayout.NORTH);*/
-
-
-
             //左侧布局 选择控制模式
             JPanel left_centre = new JPanel(new BorderLayout());
-            left_centre.setBackground(new Color(250, 250, 210));
+            left_centre.setBackground(new Color(187, 255, 255));
             left_centre.setPreferredSize(new Dimension(280, 140));
             JPanel jp_cl_text = new JPanel();
-            jp_cl_text.setBackground(Color.white);
+            jp_cl_text.setBackground(new Color(255, 235 ,205));
             JLabel jl_cb_text = new JLabel("设置控制模式");
             JLabel jl_jiqijiao = new JLabel();
             jl_jiqijiao.setPreferredSize(new Dimension(21, 19));
@@ -408,15 +557,15 @@ public class Demo {
             // =========================自动手动单选框===============================
             JPanel left_top_centre = new JPanel(new GridLayout(2, 1));
             JPanel jp_cb = new JPanel();
-            jp_cb.setBackground(new Color(250, 250, 210));
+            jp_cb.setBackground(new Color(187, 255, 255));
             JRadioButton c1 = new JRadioButton("自动控制");// 只传了两个参数
             Font font_zidong = new Font("黑体", Font.PLAIN, 15);// 创建1个字体实例
             c1.setFont(font_zidong);
-            c1.setBackground(new Color(250, 250, 210));
+            c1.setBackground(new Color(187, 255, 255));
             JRadioButton c2 = new JRadioButton("手动控制");
             Font font_shoudong = new Font("黑体", Font.PLAIN, 15);// 创建1个字体实例
             c2.setFont(font_shoudong);
-            c2.setBackground(new Color(250, 250, 210));
+            c2.setBackground(new Color(187, 255, 255));
             c1.setSelected(true);
             ButtonGroup group = new ButtonGroup(); // 创建一个按钮组
             group.add(c1);
@@ -427,7 +576,7 @@ public class Demo {
             // =========================end===============================
             // =========================确定按钮===============================
             JPanel jp_ok = new JPanel();
-            jp_ok.setBackground(new Color(250, 250, 210));
+            jp_ok.setBackground(new Color(187, 255, 255));
             JButton btn_ok = new JButton("确定");
             btn_ok.setBackground(Color.white);
             jp_ok.add(btn_ok);
@@ -493,16 +642,13 @@ public class Demo {
 
                 }
             });
-
-
-
             //左侧布局手动控制模式详细信息
             JPanel left_bottom = new JPanel(new BorderLayout());
 
-            left_bottom.setBackground(new Color(250, 250, 210));
+            //left_bottom.setBackground(new Color(250, 250, 210));
             left_bottom.setPreferredSize(new Dimension(280, 720));
             JPanel jp_sd_text = new JPanel();
-            jp_sd_text.setBackground(Color.white);
+            jp_sd_text.setBackground(new Color(255, 235 ,205));
             JLabel jl_sd_text = new JLabel("手动控制模式");
             JLabel jl_jiqijiao1 = new JLabel();
             jl_jiqijiao1.setPreferredSize(new Dimension(21, 19));
@@ -525,7 +671,7 @@ public class Demo {
             //手动控制模式下170的灯
             JPanel jp_deng_170 = new JPanel(new GridLayout(1,2));
             jp_deng_170.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_170.setBackground(new Color(250, 250, 210));
+            jp_deng_170.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height = new JLabel("-170米处");
             jl_height.setFont(new Font("黑体",Font.PLAIN,18));
@@ -533,10 +679,10 @@ public class Demo {
             jp_deng_170.add(jl_height);
             jl_height.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_170 = new JButton();
+            jbDeng_170 = new JButton();
             jbDeng_170.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_170.setBackground(new Color(250, 250, 210));
-            jbDeng_170.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_170.setBackground(new Color(187, 255, 255));
+            jbDeng_170.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_170.addActionListener(new ActionListener() {
                 @Override
@@ -560,17 +706,17 @@ public class Demo {
             //手动控制模式下185的灯
             JPanel jp_deng_185 = new JPanel(new GridLayout(1,2));
             jp_deng_185.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_185.setBackground(new Color(250, 250, 210));
+            jp_deng_185.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height185 = new JLabel("-185米处");
             jl_height185.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height185.setHorizontalAlignment(JLabel.CENTER);
             jl_height185.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_185 = new JButton();
+            jbDeng_185 = new JButton();
             jbDeng_185.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_185.setBackground(new Color(250, 250, 210));
-            jbDeng_185.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_185.setBackground(new Color(187, 255, 255));
+            jbDeng_185.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_185.addActionListener(new ActionListener() {
                 @Override
@@ -594,17 +740,17 @@ public class Demo {
             //手动控制模式下200北部的灯
             JPanel jp_deng_200top = new JPanel(new GridLayout(1,2));
             jp_deng_200top.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_200top.setBackground(new Color(250, 250, 210));
+            jp_deng_200top.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height200top = new JLabel("-200米北处");
             jl_height200top.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height200top.setHorizontalAlignment(JLabel.CENTER);
             jl_height200top.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_200top = new JButton();
+            jbDeng_200top = new JButton();
             jbDeng_200top.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_200top.setBackground(new Color(250, 250, 210));
-            jbDeng_200top.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_200top.setBackground(new Color(187, 255, 255));
+            jbDeng_200top.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_200top.addActionListener(new ActionListener() {
                 @Override
@@ -628,17 +774,17 @@ public class Demo {
             //手动控制模式下200的灯
             JPanel jp_deng_200 = new JPanel(new GridLayout(1,2));
             jp_deng_200.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_200.setBackground(new Color(250, 250, 210));
+            jp_deng_200.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height200 = new JLabel("-200米处");
             jl_height200.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height200.setHorizontalAlignment(JLabel.CENTER);
             jl_height200.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_200 = new JButton();
+            jbDeng_200 = new JButton();
             jbDeng_200.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_200.setBackground(new Color(250, 250, 210));
-            jbDeng_200.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_200.setBackground(new Color(187, 255, 255));
+            jbDeng_200.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_200.addActionListener(new ActionListener() {
                 @Override
@@ -662,17 +808,17 @@ public class Demo {
             //手动控制模式下200南部的灯
             JPanel jp_deng_200south = new JPanel(new GridLayout(1,2));
             jp_deng_200south.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_200south.setBackground(new Color(250, 250, 210));
+            jp_deng_200south.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height200south = new JLabel("-200米南处");
             jl_height200south.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height200south.setHorizontalAlignment(JLabel.CENTER);
             jl_height200south.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_200south = new JButton();
+            jbDeng_200south = new JButton();
             jbDeng_200south.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_200south.setBackground(new Color(250, 250, 210));
-            jbDeng_200south.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_200south.setBackground(new Color(187, 255, 255));
+            jbDeng_200south.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_200south.addActionListener(new ActionListener() {
                 @Override
@@ -697,17 +843,17 @@ public class Demo {
             //手动控制模式下215的灯
             JPanel jp_deng_215 = new JPanel(new GridLayout(1,2));
             jp_deng_215.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_215.setBackground(new Color(250, 250, 210));
+            jp_deng_215.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height215 = new JLabel("-215米处");
             jl_height215.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height215.setHorizontalAlignment(JLabel.CENTER);
             jl_height215.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_215 = new JButton();
+            jbDeng_215 = new JButton();
             jbDeng_215.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_215.setBackground(new Color(250, 250, 210));
-            jbDeng_215.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_215.setBackground(new Color(187, 255, 255));
+            jbDeng_215.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_215.addActionListener(new ActionListener() {
                 @Override
@@ -732,17 +878,17 @@ public class Demo {
             //手动控制模式下230的灯
             JPanel jp_deng_230 = new JPanel(new GridLayout(1,2));
             jp_deng_230.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_230.setBackground(new Color(250, 250, 210));
+            jp_deng_230.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height230 = new JLabel("-230米处");
             jl_height230.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height230.setHorizontalAlignment(JLabel.CENTER);
             jl_height230.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_230 = new JButton();
+            jbDeng_230 = new JButton();
             jbDeng_230.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_230.setBackground(new Color(250, 250, 210));
-            jbDeng_230.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_230.setBackground(new Color(187, 255, 255));
+            jbDeng_230.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_230.addActionListener(new ActionListener() {
                 @Override
@@ -767,17 +913,17 @@ public class Demo {
             //手动控制模式下245的灯
             JPanel jp_deng_245 = new JPanel(new GridLayout(1,2));
             jp_deng_245.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_deng_245.setBackground(new Color(250, 250, 210));
+            jp_deng_245.setBackground(new Color(187, 255, 255));
             // 提示字
             JLabel jl_height245 = new JLabel("-245米处");
             jl_height245.setFont(new Font("黑体",Font.PLAIN,18));
             jl_height245.setHorizontalAlignment(JLabel.CENTER);
             jl_height245.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JButton jbDeng_245 = new JButton();
+            jbDeng_245 = new JButton();
             jbDeng_245.setIcon(new ImageIcon("img//hong_big.png"));
-            jbDeng_245.setBackground(new Color(250, 250, 210));
-            jbDeng_245.setBorder(BorderFactory.createLineBorder(new Color(250, 250, 210)));
+            jbDeng_245.setBackground(new Color(187, 255, 255));
+            jbDeng_245.setBorder(BorderFactory.createLineBorder(new Color(187, 255, 255)));
             //添加按钮点击事件
             jbDeng_245.addActionListener(new ActionListener() {
                 @Override
@@ -799,12 +945,6 @@ public class Demo {
             });
             jp_deng_245.add(jl_height245);
             jp_deng_245.add(jbDeng_245);
-
-
-
-
-
-
             jp_deng.add(jp_deng_170);
             jp_deng.add(jp_deng_185);
             jp_deng.add(jp_deng_200top);
@@ -821,7 +961,7 @@ public class Demo {
             jp_tijiao.add(jb_tijiao);
             jp_tijiao.setPreferredSize(new Dimension(280, 50));
             jp_tijiao.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY,1));
-            jp_tijiao.setBackground(new Color(250, 250, 210));
+            jp_tijiao.setBackground(new Color(187, 255, 255));
 
             jb_tijiao.addActionListener(new ActionListener() {
                 @Override
@@ -968,7 +1108,6 @@ public class Demo {
                             Demo.yellowButton6.setIcon(Demo.GrayIcon);
                             buf[10] = (byte) 0x04;
                         }else{//手动控制245绿灯亮
-                            System.out.println("245绿灯亮");
                             Demo.redButton6.setIcon(Demo.GrayIcon);
                             Demo.greenButton6.setIcon(Demo.GreenIcon);
                             Demo.yellowButton6.setIcon(Demo.GrayIcon);
@@ -981,66 +1120,63 @@ public class Demo {
                     }
                 }
             });
-
             left_bottom.add(jp_tijiao,BorderLayout.SOUTH);
-
             jPanel_left.add(left_bottom,BorderLayout.SOUTH);
-
-
-
             jf.add(jPanel_left,BorderLayout.WEST);
             jf.add(jPanel_centerAll,BorderLayout.CENTER);
-
             // 底部logo
             JPanel jp_logo = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             jp_logo.setBackground(new Color(221, 231, 246));
             ImageIcon ico12 = new ImageIcon("img//logo_chang.png");
             ico12.setImage(ico12.getImage().getScaledInstance(300, 60, Image.SCALE_DEFAULT));
             JLabel jl_logo = new JLabel(ico12);
-
             jp_logo.add(jl_logo);
-
             jf.add(jp_logo, BorderLayout.SOUTH);
-
             JPanel jPanel_top  = new JPanel(new BorderLayout());
-            jPanel_top.setBackground(new Color(250,250,210));
+            jPanel_top.setBackground(new Color(	152 ,245, 255));
             jPanel_top.setPreferredSize(new Dimension(300,60));
 
             JLabel jb_biaoti = new JLabel();
-            jb_biaoti.setText("中关井下斜坡道交通管控平台");
-            jb_biaoti.setForeground(Color.red);
+            jb_biaoti.setText("斜坡道管理软件WXXJR-V1.1");
+            jb_biaoti.setForeground(Color.black);
         jb_biaoti.setFont(new Font("黑体",Font.PLAIN,24));
         jb_biaoti.setHorizontalAlignment(JLabel.CENTER);
         jb_biaoti.setAlignmentX(Component.CENTER_ALIGNMENT);
             jPanel_top.add(jb_biaoti,BorderLayout.NORTH);
         //声明菜单相关的组件
             JMenuBar menuBar = new JMenuBar();
-            menuBar.setBackground(new Color(207, 220, 243));
+            menuBar.setBackground(new Color(255, 235 ,205));
             menuBar.setPreferredSize(new Dimension(300,30));
             JMenu xitongMenue = new JMenu("系统");
             JMenu wl_lianjieMenue = new JMenu("网络连接");
             JMenu carMenue = new JMenu("车辆信息");
             JMenu baojingMenue = new JMenu("报警信息");
+            JMenu shengji = new JMenu("固件升级");
             JMenuItem tuichu = new JMenuItem("退出");
             JMenuItem ip_lianjie = new JMenuItem("连接主站ip");
             JMenuItem xinxi = new JMenuItem("车辆信息管控");
             JMenuItem baojingMenueItem = new JMenuItem("报警日志查看");
+            JMenuItem shengjiItem = new JMenuItem("升级程序");
             xitongMenue.setFont(font);
             wl_lianjieMenue.setFont(font);
             carMenue.setFont(font);
             baojingMenue.setFont(font);
+            shengji.setFont(font);
             tuichu.setFont(font);
             ip_lianjie.setFont(font);
             xinxi.setFont(font);
             baojingMenueItem.setFont(font);
+            shengjiItem.setFont(font);
             xitongMenue.add(tuichu);
             wl_lianjieMenue.add(ip_lianjie);
             carMenue.add(xinxi);
             baojingMenue.add(baojingMenueItem);
+            shengji.add(shengjiItem);
             menuBar.add(xitongMenue);
             menuBar.add(wl_lianjieMenue);
             menuBar.add(carMenue);
             menuBar.add(baojingMenue);
+            menuBar.add(shengji);
             jPanel_top.add(menuBar,BorderLayout.SOUTH);
             jf.add(jPanel_top,BorderLayout.NORTH);
             //给车辆信息管控添加点击事件
@@ -1067,6 +1203,13 @@ public class Demo {
                 }
             }
         });
+            //给升级程序添加点击事件
+            shengjiItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    shengjiPage();
+                }
+            });
 
             //给菜单栏退出添加点击事件
             tuichu.addActionListener(new ActionListener() {
@@ -1094,6 +1237,22 @@ public class Demo {
 
     public static void ReddengInit() {
         //初始化全部红灯
+        Demo.jbDeng_170.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_185.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_200top.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_200.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_200south.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_215.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_230.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_245.setIcon(Demo.BigRedIcon);
+        Demo.red_170 = true;
+        Demo.red_185 = true;
+        Demo.red_200top = true;
+        Demo.red_200 = true;
+        Demo.red_200south = true;
+        Demo.red_215 = true;
+        Demo.red_230 = true;
+        Demo.red_245 = true;
         Demo.greenButton1.setIcon(Demo.GrayIcon);
         Demo.redButton1.setIcon(Demo.RedIcon);
         Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -1136,6 +1295,23 @@ public class Demo {
     }
 
     public static void GreenDengInit(){
+        //初始化手动模式按钮
+        Demo.jbDeng_170.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_185.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_200top.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_200.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_200south.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_215.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_230.setIcon(Demo.BigRedIcon);
+        Demo.jbDeng_245.setIcon(Demo.BigRedIcon);
+        Demo.red_170 = true;
+        Demo.red_185 = true;
+        Demo.red_200top = true;
+        Demo.red_200 = true;
+        Demo.red_200south = true;
+        Demo.red_215 = true;
+        Demo.red_230 = true;
+        Demo.red_245 = true;
         //初始化全部绿灯
         Demo.greenButton1.setIcon(Demo.GreenIcon);
         Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -1177,12 +1353,6 @@ public class Demo {
         Demo.buf[10] = (byte) 0x02;
         outMessage(Demo.buf);
     }
-
-
-
-
-
-
     //socket输出
     public static void outMessage(byte[]  buffer){
         try {
@@ -1191,9 +1361,6 @@ public class Demo {
             e.printStackTrace();
         }
     }
-
-
-
 }
 //连接读卡分站
 class socket_con extends Thread {
@@ -1234,8 +1401,6 @@ class socket_con extends Thread {
         }
     }
 }
-
-
 class input_one extends Thread {
     /**
      * 将字节数组转换成十六进制的字符串
@@ -1303,7 +1468,6 @@ class input_one extends Thread {
         Demo.outMessage(Demo.buf);
         while (true) {
             //接收数组
-            System.out.println("自动线程开始！");
             byte[] buffer = new byte[30];
             try {
                 // 读进buffer
@@ -1319,6 +1483,85 @@ class input_one extends Thread {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            if (buffer[4] == 102){
+                if (buffer[5] == 1){
+                    JOptionPane.showMessageDialog(null, "升级固件程序成功！");
+                }else if (buffer[5] == 2){
+                    JOptionPane.showMessageDialog(null, "升级固件程序失败！,请重新操作！");
+                }else if (buffer[5] == 3){
+                    System.out.println("可以发送升级文件");
+                    if (Demo.file.exists()){
+                        try {
+                            FileInputStream fis = new FileInputStream(Demo.file);
+                            byte[] buffer_file = new byte[0];
+                            try {
+                                buffer_file = new byte[fis.available()];
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                            try {
+                                int len = fis.read(buffer_file);
+                                int yushu = len % 8;
+                                byte[] buf_file_send = new byte[13];
+                                buf_file_send[0] = (byte) 0x08;
+                                buf_file_send[1] = (byte) 0x00;
+                                buf_file_send[2] = (byte) 0x00;
+                                buf_file_send[3] = (byte) 0x00;
+                                buf_file_send[4] = (byte)0x64;
+                                for (int i=0;i<len-yushu;i=i+8){
+                                    buf_file_send[5] = buffer_file[i];
+                                    buf_file_send[6] = buffer_file[i+1];
+                                    buf_file_send[7] = buffer_file[i+2];
+                                    buf_file_send[8] = buffer_file[i+3];
+                                    buf_file_send[9] = buffer_file[i+4];
+                                    buf_file_send[10] = buffer_file[i+5];
+                                    buf_file_send[11] = buffer_file[i+6];
+                                    buf_file_send[12] = buffer_file[i+7];
+                                    Demo.outMessage(buf_file_send);
+                                }
+                                //发送最后的余数
+                                byte[] buf_yushu = new byte[5+yushu];
+                                buf_yushu[1]=(byte) 0x00;
+                                buf_yushu[2]=(byte) 0x00;
+                                buf_yushu[3]=(byte) 0x00;
+                                if (yushu!=0){
+                                    for (int i=len-yushu , j = 5;i<len;i++,j++){
+                                        buf_yushu[j] = buffer_file[i];
+                                    }
+                                    buf_yushu[0]=(byte) yushu;
+                                    buf_yushu[4] = (byte) 0x64;
+                                    Demo.outMessage(buf_yushu);
+                                }
+                                String strHex = Integer.toHexString(len);
+                                byte[] buf_last = new byte[9];
+                                buf_last[0]=(byte)0x04 ;
+                                buf_last[1]=(byte) 0x00;
+                                buf_last[2]=(byte) 0x00;
+                                buf_last[3]=(byte) 0x00;
+                                buf_last[4] = (byte) 0x65;
+                                byte[] number = Demo.intToByteArray(len);
+                                for (int i = 0;i<4;i++){
+                                    buf_last[5] = number[0];
+                                    buf_last[6] = number[1];
+                                    buf_last[7] = number[2];
+                                    buf_last[8] = number[3];
+                                }
+
+                                Demo.outMessage(buf_last);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        } catch (FileNotFoundException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }else {
+                    JOptionPane.showMessageDialog(null, "密码校验失败失败！,请重新操作！");
+                }
+
+
+            }
+
             System.out.println(Arrays.toString(buffer));
             if(dncodeHex((int) buffer[4]).equals(Demo.chongfu1)
                     &&dncodeHex((int) buffer[5]).equals(Demo.chongfu2)
@@ -1341,14 +1584,14 @@ class input_one extends Thread {
                                         Demo.carnumber_one_falg = false;
                                         //报警信息状态改变
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_top.setText("车辆编号"+car+"从上半段出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
                                     }
                                     if (car.equals(Demo.map.get(2))) {//下半段车出车，移除key2，灯不变
                                         Demo.map.remove(2);
                                         Demo.carnumber_two_falg = false;
                                         //报警信息状态改变
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_south.setText("车辆编号"+car+"从上半段出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
                                     }
                                 }else {
                                     System.out.println("上下段都已进车，请退至等候区等待下次识别！");
@@ -1392,7 +1635,7 @@ class input_one extends Thread {
                                         Demo.carnumber_one_falg = false;
                                         //报警信息状态改变
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                        Demo.carId_top.setText("车辆编号"+car+"从上半段出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
                                     }else{
                                         System.out.println("上半段已进车，请退至等候区等待下次识别！");
                                     }
@@ -1429,13 +1672,12 @@ class input_one extends Thread {
                                         Demo.buf[9] = (byte) 0x02;//230绿灯
                                         Demo.buf[10] = (byte) 0x02;//245绿灯
                                         Demo.outMessage(Demo.buf);
-
                                         Demo.map.remove(2);
                                         Demo.carnumber_two_falg = false;
                                         Demo.car_200south = false;
                                         //报警信息状态改变
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                        Demo.carId_south.setText("车辆编号"+car+"从上半段出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
                                     } else{//上半段进车 下半段有车 记录进车识别标识
                                         Demo.map.put(1, dncodeHex((int) buffer[6]));
                                         //判断是170和185
@@ -1460,7 +1702,7 @@ class input_one extends Thread {
 
                                             Demo.carnumber_one_falg = true;
                                             Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                            Demo.carId_top.setText("车辆编号"+car+"从-170处进车");
+                                            Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
                                         } else {
                                             // 果是185 185黄灯亮 170,200,200上红灯
                                             Demo.redButton1.setIcon(Demo.RedIcon);
@@ -1480,10 +1722,9 @@ class input_one extends Thread {
                                             Demo.buf[6] = (byte) 0x01;//185黄灯
                                             Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
                                             Demo.outMessage(Demo.buf);
-
                                             Demo.carnumber_one_falg = true;
                                             Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                            Demo.carId_top.setText("车辆编号"+car+"从-185处进车");
+                                            Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
                                         }
                                     }
                                 }
@@ -1513,7 +1754,7 @@ class input_one extends Thread {
                                     Demo.carnumber_one_falg = true;
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                    Demo.carId_top.setText("车辆编号"+car+"从-170处进车");
+                                    Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
                                 } else {
                                     // 果是185 185黄灯亮 170,200,200上红灯
                                     Demo.redButton1.setIcon(Demo.RedIcon);
@@ -1537,7 +1778,7 @@ class input_one extends Thread {
                                     Demo.carnumber_one_falg = true;
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                    Demo.carId_top.setText("车辆编号"+car+"从-185处进车");
+                                    Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
                                 }
                             }
                         }
@@ -1558,7 +1799,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_top.setText("车辆编号"+car+"从上半段出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
                                     }else {
                                         System.out.println("上半段和200已进车，请退至等候区等待下次识别！");
                                     }
@@ -1588,7 +1829,7 @@ class input_one extends Thread {
                                         Demo.carnumber_one_falg = true;
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                        Demo.carId_top.setText("车辆编号"+car+"从-170处进车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
                                     } else {
                                         // 果是185 185黄灯亮 170,200上红灯
                                         Demo.redButton1.setIcon(Demo.RedIcon);
@@ -1612,7 +1853,7 @@ class input_one extends Thread {
                                         Demo.carnumber_one_falg = true;
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                        Demo.carId_top.setText("车辆编号"+car+"从-185处进车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
                                     }
                                 }
 
@@ -1637,7 +1878,7 @@ class input_one extends Thread {
                                     Demo.outMessage(Demo.buf);
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                    Demo.carId_top.setText("车辆编号"+car+"从上半段出车");
+                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
                                 }else{//下半段有车进来
                                     if (!Demo.car_200south){//下半段车没到200c处，灯变
                                         Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -1656,7 +1897,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_top.setText("车辆编号"+car+"从上半段出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
                                     }
                                 }
                             }
@@ -1886,7 +2127,7 @@ class input_one extends Thread {
                                         Demo.carnumber_one_falg = false;
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_top.setText("车辆编号"+car+"从-200处出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从-200处驶离");
 
                                     }
                                     if (car.equals(Demo.map.get(2))){//下半段车出车
@@ -1894,12 +2135,11 @@ class input_one extends Thread {
                                         Demo.carnumber_two_falg = false;
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_south.setText("车辆编号"+car+"从-200处出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从-200处驶离");
                                     }
                                 }else{
                                     System.out.println("上下半段已进车，请退至等候区等待下次识别！");
                                 }
-
                             }else if (Demo.map.size()==1){//也是出车，需要变灯
                                 if (car.equals(Demo.map.get(1)) || car.equals(Demo.map.get(2))) {
                                     //出车
@@ -1940,7 +2180,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                        Demo.carId_top.setText("车辆编号"+car+"从-200处出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从-200处驶离");
                                     } else {
                                         Demo.map.remove(2);//出车移除数据
                                         Demo.carnumber_two_falg = false;
@@ -1977,7 +2217,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                        Demo.carId_south.setText("车辆编号"+car+"从-200处出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从-200处驶离");
                                     }
                                 }else{
                                     System.out.println("已进车，请退至等候区等待下次识别");
@@ -2012,7 +2252,7 @@ class input_one extends Thread {
                                 Demo.outMessage(Demo.buf);
                                 //提示信息
                                 Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                Demo.carId_top.setText("车辆编号"+car+"从-200处进车");
+                                Demo.carId_top.setText("车辆编号"+car+"从-200处驶入");
                             }
                         } else {
                             System.out.println("200分站错误的rfid站号码");
@@ -2027,14 +2267,14 @@ class input_one extends Thread {
                                         Demo.carnumber_one_falg = false;
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_top.setText("车辆编号"+car+"从下半段出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                     }
                                     if (car.equals(Demo.map.get(2))){//下半段车出车，移除key2
                                         Demo.map.remove(2);
                                         Demo.carnumber_two_falg = false;
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_south.setText("车辆编号"+car+"从下半段出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
                                     }
                                 }else {
                                     System.out.println("上下半段已进车，请退至等候区等待下次识别！");
@@ -2075,7 +2315,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                        Demo.carId_south.setText("车辆编号"+car+"从下半段出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
                                     }else{
                                         System.out.println("下半段已进车，请退置等候区等待下次识别！");
                                     }
@@ -2116,7 +2356,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                        Demo.carId_top.setText("车辆编号"+car+"从下半段出车");
+                                        Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                     }else{//下半段进车，上半段有车
                                         Demo.map.put(2, dncodeHex((int) buffer[6]));
                                         //判断是215、230、245
@@ -2145,7 +2385,7 @@ class input_one extends Thread {
                                             Demo.outMessage(Demo.buf);
                                             //提示信息
                                             Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                            Demo.carId_south.setText("车辆编号"+car+"从-215处进车");
+                                            Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
                                         } else if (buffer[4] == 21) {//如果是230 230黄灯亮 200,215,245红灯
                                             Demo.carnumber_two_falg = true;
                                             Demo.redButton3.setIcon(Demo.RedIcon);
@@ -2171,7 +2411,7 @@ class input_one extends Thread {
                                             Demo.outMessage(Demo.buf);
                                             //提示信息
                                             Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                            Demo.carId_south.setText("车辆编号"+car+"从-230处进车");
+                                            Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
 
                                         } else { //如果是245 245黄灯亮 200,215、230红灯
                                             Demo.carnumber_two_falg = true;
@@ -2198,7 +2438,7 @@ class input_one extends Thread {
                                             Demo.outMessage(Demo.buf);
                                             //提示信息
                                             Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                            Demo.carId_south.setText("车辆编号"+car+"从-245处进车");
+                                            Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
                                         }
                                     }
                                 }
@@ -2230,7 +2470,7 @@ class input_one extends Thread {
                                     Demo.outMessage(Demo.buf);
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                    Demo.carId_south.setText("车辆编号"+car+"从-215处进车");
+                                    Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
                                 } else if (buffer[4] == 21) {//如果是230 230黄灯亮 200，215,245红灯
                                     Demo.carnumber_two_falg = true;
                                     Demo.redButton3.setIcon(Demo.RedIcon);
@@ -2256,7 +2496,7 @@ class input_one extends Thread {
                                     Demo.outMessage(Demo.buf);
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                    Demo.carId_south.setText("车辆编号"+car+"从-230处进车");
+                                    Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
                                 } else { //如果是245 245黄灯亮 200， 215、230红灯
                                     Demo.carnumber_two_falg = true;
                                     Demo.redButton3.setIcon(Demo.RedIcon);
@@ -2282,7 +2522,7 @@ class input_one extends Thread {
                                     Demo.outMessage(Demo.buf);
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                    Demo.carId_south.setText("车辆编号"+car+"从-245处进车");
+                                    Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
                                 }
                             }
                         }
@@ -2309,7 +2549,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_south.setText("车辆编号"+car+"从下半段出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
                                     }else{
                                         System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
                                     }
@@ -2340,7 +2580,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                        Demo.carId_south.setText("车辆编号"+car+"从-215处进车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
                                         //车闪标识
                                         Demo.carnumber_two_falg = true;
                                     } else if (buffer[4] == 21) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
@@ -2367,7 +2607,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                        Demo.carId_south.setText("车辆编号"+car+"从-230处进车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
                                         //车闪标识
                                         Demo.carnumber_two_falg = true;
                                         System.out.println("5号站进车！");
@@ -2395,7 +2635,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                        Demo.carId_south.setText("车辆编号"+car+"从-245处进车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
                                         //车闪标识
                                         Demo.carnumber_two_falg = true;
                                     }
@@ -2427,7 +2667,7 @@ class input_one extends Thread {
                                     Demo.outMessage(Demo.buf);
                                     //提示信息
                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                    Demo.carId_south.setText("车辆编号"+car+"从下半段出车");
+                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
                                 }else{//上半段有车进来
                                     if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
                                         Demo.redButton3.setIcon(Demo.RedIcon);
@@ -2450,7 +2690,7 @@ class input_one extends Thread {
                                         Demo.outMessage(Demo.buf);
                                         //提示信息
                                         Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                        Demo.carId_south.setText("车辆编号"+car+"从下半段出车");
+                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
                                     }
                                 }
                             }
@@ -2464,14 +2704,12 @@ class input_one extends Thread {
             }
             }
     }
-
 }
 class cheshan1 extends Thread {
     @Override
     public void run() {
-
        while (2>1){
-           System.out.println("车闪1");
+           //System.out.println("车闪1");
            if(Demo.carnumber_one_falg ==true){
                Demo.carButton1.setVisible(true);
                Demo.carButton1.setIcon(new ImageIcon("img//car1.png"));
@@ -2491,17 +2729,14 @@ class cheshan1 extends Thread {
                Demo.carButton1.setVisible(false);
            }
         }
-
     }
-
 }
-
 class cheshan2 extends Thread {
     @Override
     public void run() {
 
         while (2>1){
-            System.out.println("车闪2");
+            //System.out.println("车闪2");
             if (Demo.carnumber_two_falg == true){
                 Demo.carButton2.setVisible(true);
                 Demo.carButton2.setIcon(new ImageIcon("img//car2.png"));
@@ -2524,7 +2759,6 @@ class cheshan2 extends Thread {
     }
 
 }
-
 class baojing extends Thread {
     @Override
     public void run() {

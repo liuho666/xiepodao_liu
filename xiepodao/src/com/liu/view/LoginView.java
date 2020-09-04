@@ -1,6 +1,7 @@
 package com.liu.view;
 
 import com.liu.handler.LoginViewHandler;
+import com.liu.main.BackgroundPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,14 +142,12 @@ public class LoginView extends JFrame{
                 }
             });
         }
-
         jFrame.setSize(600,400);
         jFrame.setLocationRelativeTo(null);// 居中展示
         jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jFrame.setResizable(true);
         jFrame.setVisible(true);
     }
-
 
     public static void main(String[] args) {
         new LoginView();
