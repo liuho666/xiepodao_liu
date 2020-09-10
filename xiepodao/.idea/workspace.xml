@@ -6,12 +6,12 @@
     </artifacts-to-build>
   </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="4073" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="4077" />
     <bookmark url="file://$PROJECT_DIR$/src/com/liu/service/WarnService.java" line="6" />
     <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" />
     <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="1262" />
     <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="1664" />
-    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="2496" />
+    <bookmark url="file://$PROJECT_DIR$/src/com/liu/main/Demo.java" line="2500" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e572585d-59bc-4e69-8ea9-7a564692419a" name="Default Changelist" comment="">
@@ -83,8 +83,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="1711" column="53" lean-forward="true" selection-start-line="1711" selection-start-column="53" selection-end-line="1711" selection-end-column="53" />
+            <state relative-caret-position="360">
+              <caret line="2042" column="75" lean-forward="true" selection-start-line="2042" selection-start-column="75" selection-end-line="2042" selection-end-column="75" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#58662#58663#0" expanded="true" />
@@ -96,7 +96,6 @@
                 <element signature="e#59762#59763#0" expanded="true" />
                 <element signature="e#59816#59817#0" expanded="true" />
                 <element signature="e#76230#76392#1" />
-                <element signature="e#94974#94995#0" />
                 <element signature="e#96838#96844#0" />
               </folding>
             </state>
@@ -543,7 +542,7 @@
       <workItem from="1599564525520" duration="5353000" />
       <workItem from="1599611144272" duration="20156000" />
       <workItem from="1599643570110" duration="251000" />
-      <workItem from="1599697076368" duration="25153000" />
+      <workItem from="1599697076368" duration="25964000" />
     </task>
     <task id="LOCAL-00001" summary="提交到本地仓库">
       <created>1597828793580</created>
@@ -643,11 +642,18 @@
       <option name="project" value="LOCAL" />
       <updated>1599643719874</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="提交到本地仓库">
+      <created>1599730800056</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1599730800059</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="512195000" />
+    <option name="totallyTimeSpent" value="513006000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1110,8 +1116,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/liu/main/Demo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="1711" column="53" lean-forward="true" selection-start-line="1711" selection-start-column="53" selection-end-line="1711" selection-end-column="53" />
+        <state relative-caret-position="360">
+          <caret line="2042" column="75" lean-forward="true" selection-start-line="2042" selection-start-column="75" selection-end-line="2042" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#58662#58663#0" expanded="true" />
@@ -1123,7 +1129,6 @@
             <element signature="e#59762#59763#0" expanded="true" />
             <element signature="e#59816#59817#0" expanded="true" />
             <element signature="e#76230#76392#1" />
-            <element signature="e#94974#94995#0" />
             <element signature="e#96838#96844#0" />
           </folding>
         </state>

@@ -1778,6 +1778,7 @@ class input_one extends Thread {
                                                 if (car.equals(Demo.map.get(2))) {//下半段车出车，移除key2，灯不变
                                                     Demo.map.remove(2);
                                                     Demo.yichang_south = false;
+                                                    Demo.car_200top = false;
                                                     Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton1.setVisible(false);
@@ -1796,6 +1797,7 @@ class input_one extends Thread {
                                                     Demo.map.remove(1);
                                                     Demo.yichang_top = false;
                                                     Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_one_falg = false;
                                                     Demo.carButton1.setVisible(false);
                                                     //报警信息状态改变
@@ -1845,9 +1847,11 @@ class input_one extends Thread {
                                                     //改变标识
                                                     Demo.map.remove(2);
                                                     Demo.yichang_south = false;
+                                                    Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton1.setVisible(false);
-                                                    Demo.car_200south = false;
+
 
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
