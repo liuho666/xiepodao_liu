@@ -135,6 +135,14 @@ public class Demo {
     static boolean chu215_flag = true;
     static boolean chu230_flag = true;
     static boolean chu245_flag = true;
+    //防止闯红灯的异常处理标识
+    //没有200进车的情况
+    static boolean yichang_top = false;
+    static boolean yichang_south = false;
+    //有200进车的情况
+    static boolean yichang200 = false;
+    static boolean yichang200_top = false;
+    static boolean yichang200_south = false;
     public static void main(String[] agrs) {
 
         mainpage();
@@ -660,6 +668,13 @@ public class Demo {
                             cuoche_flag = false;
                             car_200top = false;
                             car_200south = false;
+                            //闯红灯异常处理标识
+                            yichang_top = false;
+                            yichang_south = false;
+                            yichang200 = false;
+                            yichang200_top = false;
+                            yichang_south = false;
+
                             chongfu170_1 = "00";
                             chongfu170_2 = "00";
                             chongfu170_3 = "00";
@@ -1706,8 +1721,11 @@ class input_one extends Thread {
                                     if (Demo.car_200.equals("00")){//200没进车或者200的车出去了
                                         if (Demo.map.size() == 2) {//巷道里有两辆车，肯定是出车，判断是上半段车还是下半段车
                                             if (car.equals(Demo.map.get(1)) || car.equals(Demo.map.get(2))){
-                                                if (car.equals(Demo.map.get(1))) {//上半段车出车，移除key1，灯不变
+                                                if (car.equals(Demo.map.get(1))) {//上半段车出车，移除key1
                                                     Demo.map.remove(1);
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_one_falg = false;
                                                     Demo.carButton1.setVisible(false);
                                                     //报警信息状态改变
@@ -1759,8 +1777,10 @@ class input_one extends Thread {
                                                 }
                                                 if (car.equals(Demo.map.get(2))) {//下半段车出车，移除key2，灯不变
                                                     Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
+                                                    Demo.carButton1.setVisible(false);
                                                     //报警信息状态改变
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                     Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
@@ -1773,6 +1793,15 @@ class input_one extends Thread {
                                                 //出车
                                                 //判断车辆信息是那个区段进来的车
                                                 if (car.equals(Demo.map.get(1))) {//上半段车出车
+                                                    Demo.map.remove(1);
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
+                                                    //Demo.carnumber_one_falg = false;
+                                                    Demo.carButton1.setVisible(false);
+                                                    //报警信息状态改变
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+
                                                     //如果有一辆车,灯变,上半段变绿灯
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -1806,18 +1835,20 @@ class input_one extends Thread {
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
-                                                    Demo.map.remove(1);
-                                                    //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
-                                                    //报警信息状态改变
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+
                                                 }else{
                                                     System.out.println("上半段已进车，请退至等候区等待下次识别！");
                                                 }
                                             }
                                             if (Demo.map.get(2)!=null){
                                                 if (car.equals(Demo.map.get(2))) {//下半段车出车
+                                                    //改变标识
+                                                    Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    //Demo.carnumber_two_falg = false;
+                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.car_200south = false;
+
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -1851,70 +1882,49 @@ class input_one extends Thread {
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
-                                                    Demo.map.remove(2);
-                                                    //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
-                                                    Demo.car_200south = false;
+
                                                     //报警信息状态改变
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                                     Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
                                                 } else{//上半段进车 下半段有车 记录进车识别标识
-                                                    Demo.map.put(1, dncodeHex((int) buffer[7]));
-                                                    //判断是170和185
-                                                    if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200 200上红灯
-                                                        Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton1.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton2.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[5] = (byte) 0x01;//170黄灯
-                                                        Demo.buf[6] = (byte) 0x04;//185红灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
-                                                        Demo.outMessage(Demo.buf);
+                                                    if (Demo.yichang_south == false){
+                                                        if (Demo.map.get(1)==null){
+                                                            Demo.map.put(1, dncodeHex((int) buffer[7]));
+                                                            Demo.redButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton1.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton2.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton3.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton_200top.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200top.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[5] = (byte) 0x01;//170黄灯
+                                                            Demo.buf[6] = (byte) 0x04;//185红灯
+                                                            Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
+                                                            Demo.outMessage(Demo.buf);
 
-                                                        //Demo.carnumber_one_falg = true;
-                                                        Demo.carButton1.setVisible(true);
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
-                                                    } else {
-                                                        // 果是185 185黄灯亮 170,200,200上红灯
-                                                        Demo.redButton1.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton2.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[5] = (byte) 0x04;//170红灯
-                                                        Demo.buf[6] = (byte) 0x01;//185黄灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //Demo.carnumber_one_falg = true;
-                                                        Demo.carButton1.setVisible(true);
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
+                                                            //Demo.carnumber_one_falg = true;
+                                                            Demo.carButton1.setVisible(true);
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
+                                                        }else{
+                                                            System.out.println("已进车，请退至等候区等待下次识别！");
+                                                        }
+                                                    }else{
+                                                        System.out.println("下半段的车已进入上半区段，不允许闯红灯，请退至等候区等待下次识别！");
                                                     }
+
                                                 }
                                             }
                                         } else {//肯定是进车 map.size()==0
                                             //进车 记录进车识别标识
                                             Demo.map.put(1, dncodeHex((int) buffer[7]));
                                             //判断是170和185
-                                            if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200 200上红灯 200下绿灯
                                                 Demo.redButton1.setIcon(Demo.GrayIcon);
                                                 Demo.greenButton1.setIcon(Demo.GrayIcon);
                                                 Demo.yellowButton1.setIcon(Demo.YellowIcon);
@@ -1938,156 +1948,116 @@ class input_one extends Thread {
                                                 //提示信息
                                                 Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                 Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
-                                            } else {
-                                                // 果是185 185黄灯亮 170,200,200上红灯
-                                                Demo.redButton1.setIcon(Demo.RedIcon);
-                                                Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton2.setIcon(Demo.YellowIcon);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[5] = (byte) 0x04;//170红灯
-                                                Demo.buf[6] = (byte) 0x01;//185黄灯
-                                                Demo.buf[7] = (byte) 0x94;//200红灯 200上红灯 200下绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //车闪标识
-                                                //Demo.carnumber_one_falg = true;
-                                                Demo.carButton1.setVisible(true);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
-                                            }
                                         }
                                     }
-                                    if (!Demo.car_200.equals("00")) {//200进车了
-                                        if (!car.equals(Demo.car_200)){//200的车从下半段走了，现在上半段可以进车,也可以出车,出的车只能是上半段进的车，200进的车还在下半段没出去
-                                            if (Demo.map.size()==1){//出车，但200的车还没出去，170 185 变绿灯，移除key1
-
-                                                if (car.equals(Demo.map.get(1))){
-                                                    Demo.map.remove(1);
-                                                    Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton1.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton2.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[5] = (byte) 0x02;//170绿灯
-                                                    Demo.buf[6] = (byte) 0x02;//185绿灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
-                                                }else {
-                                                    System.out.println("上半段和200已进车，请退至等候区等待下次识别！");
-                                                }
-                                            } else {//进车
-                                                //进车 记录进车识别标识
-                                                Demo.map.put(1, dncodeHex((int) buffer[7]));
-                                                //判断是170和185
-                                                if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200上红灯200下绿灯，200黄灯
-                                                    Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton1.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton2.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[5] = (byte) 0x01;//170黄灯
-                                                    Demo.buf[6] = (byte) 0x04;//185红灯
-                                                    Demo.buf[7] = (byte) 0x91;//200上红灯200下绿灯，200黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //车闪标识
-                                                    //Demo.carnumber_one_falg = true;
-                                                    Demo.carButton1.setVisible(true);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
-                                                } else {
-                                                    // 果是185 185黄灯亮 170,200上红灯
-                                                    Demo.redButton1.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton2.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[5] = (byte) 0x04;//170红灯
-                                                    Demo.buf[6] = (byte) 0x01;//185黄灯
-                                                    Demo.buf[7] = (byte) 0x91;//200上红灯200下绿灯，200黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //车闪标识
-                                                    //Demo.carnumber_one_falg = true;
-                                                    Demo.carButton1.setVisible(true);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
+                                    if (!Demo.car_200.equals("00")){//200进车了
+                                        if (Demo.yichang200 == false){
+                                            if (!car.equals(Demo.car_200)){//200的车从下半段走了，现在上半段可以进车,也可以出车,出的车只能是上半段进的车，200进的车还在下半段没出去
+                                                if (Demo.map.size()==1){//出车，但200的车还没出去，170 185 变绿灯，移除key1
+                                                    if (car.equals(Demo.map.get(1))){
+                                                        Demo.map.remove(1);
+                                                        Demo.redButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton1.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton2.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton2.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton2.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[5] = (byte) 0x02;//170绿灯
+                                                        Demo.buf[6] = (byte) 0x02;//185绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                        //提示信息
+                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                        Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+                                                    }else {
+                                                        System.out.println("上半段和200已进车，请退至等候区等待下次识别！");
+                                                    }
+                                                } else {//进车
+                                                    //进车 记录进车识别标识
+                                                    if (Demo.yichang200_south == true ){
+                                                        Demo.map.put(1, dncodeHex((int) buffer[7]));
+                                                        if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200上红灯200下绿灯，200黄灯
+                                                            Demo.redButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton1.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton2.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton_200top.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200top.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[5] = (byte) 0x01;//170黄灯
+                                                            Demo.buf[6] = (byte) 0x04;//185红灯
+                                                            Demo.buf[7] = (byte) 0x91;//200上红灯200下绿灯，200黄灯
+                                                            Demo.outMessage(Demo.buf);
+                                                            //车闪标识
+                                                            //Demo.carnumber_one_falg = true;
+                                                            Demo.carButton1.setVisible(true);
+                                                            //提示信息
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
+                                                        }
+                                                    }else{
+                                                        System.out.println("不允许闯红灯,请退至等候区等待下次识别！");
+                                                    }
                                                 }
                                             }
-                                        }
-                                        if (car.equals(Demo.car_200)){//从200进的车要从上段出车，移除car_200
-                                            Demo.car_200 = "00";
-                                            //Demo.carnumber_one_falg = false;
-                                            Demo.carButton1.setVisible(false);
-                                            if (Demo.map.size()==0){//下半段没有车进来，1，2，3变绿灯
-                                                Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton1.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton2.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton3.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[5] = (byte) 0x02;//170绿灯
-                                                Demo.buf[6] = (byte) 0x02;//185绿灯灯
-                                                Demo.buf[7] = (byte) 0x52;//200上绿灯200下绿灯，200绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
-                                            }else{//下半段有车进来
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
-                                                if (!Demo.car_200south){//下半段车没到200c处，灯变
+                                            if (car.equals(Demo.car_200)){//从200进的车要从上段出车，移除car_200
+                                                Demo.car_200 = "00";
+                                                //清除异常标识
+                                                Demo.yichang200 = false;
+                                                Demo.yichang200_top = false;
+                                                Demo.yichang200_south = false;
+                                                //Demo.carnumber_one_falg = false;
+                                                Demo.carButton1.setVisible(false);
+                                                if (Demo.map.size()==0){//下半段没有车进来，1，2，3变绿灯
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
                                                     Demo.redButton2.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton2.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton3.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.greenButton3.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton3.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
                                                     Demo.buf[5] = (byte) 0x02;//170绿灯
-                                                    Demo.buf[6] = (byte) 0x02;//185绿灯
-                                                    Demo.buf[7] = (byte) 0x64;//200上绿灯200下红灯，200红灯
+                                                    Demo.buf[6] = (byte) 0x02;//185绿灯灯
+                                                    Demo.buf[7] = (byte) 0x52;//200上绿灯200下绿灯，200绿灯
                                                     Demo.outMessage(Demo.buf);
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+                                                }else{//下半段有车进来
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+                                                    if (!Demo.car_200south){//下半段车没到200c处，灯变
+                                                        Demo.redButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton1.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton2.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton2.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton2.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton3.setIcon(Demo.RedIcon);
+                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[5] = (byte) 0x02;//170绿灯
+                                                        Demo.buf[6] = (byte) 0x02;//185绿灯
+                                                        Demo.buf[7] = (byte) 0x64;//200上绿灯200下红灯，200红灯
+                                                        Demo.outMessage(Demo.buf);
+                                                    }
                                                 }
                                             }
+                                        }else{
+                                            System.out.println("不允许闯红灯，请退至等候区等待下次识别！");
                                         }
+
                                     }
                                     Demo.chongfu170_1 = dncodeHex((int) buffer[4]);
                                     Demo.chongfu170_2 = dncodeHex((int) buffer[5]);
@@ -2108,6 +2078,8 @@ class input_one extends Thread {
                                                 if (car.equals(Demo.map.get(1))) {//上半段车出车，移除key1，灯不变
                                                     Demo.map.remove(1);
                                                     //Demo.carnumber_one_falg = false;
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
                                                     Demo.carButton1.setVisible(false);
                                                     //报警信息状态改变
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
@@ -2158,7 +2130,9 @@ class input_one extends Thread {
                                                 if (car.equals(Demo.map.get(2))) {//下半段车出车，移除key2，灯不变
                                                     Demo.map.remove(2);
                                                     //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
+                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200south = false;
                                                     //报警信息状态改变
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                     Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
@@ -2171,6 +2145,15 @@ class input_one extends Thread {
                                                 //出车
                                                 //判断车辆信息是那个区段进来的车
                                                 if (car.equals(Demo.map.get(1))) {//上半段车出车
+                                                    Demo.map.remove(1);
+                                                    //Demo.carnumber_one_falg = false;
+                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
+                                                    //报警信息状态改变
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+
                                                     //如果有一辆车,灯变,上半段变绿灯
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -2204,18 +2187,19 @@ class input_one extends Thread {
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
-                                                    Demo.map.remove(1);
-                                                    //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
-                                                    //报警信息状态改变
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+
                                                 }else{
                                                     System.out.println("上半段已进车，请退至等候区等待下次识别！");
                                                 }
                                             }
                                             if (Demo.map.get(2)!=null){
                                                 if (car.equals(Demo.map.get(2))) {//下半段车出车
+                                                    Demo.map.remove(2);
+                                                    //Demo.carnumber_two_falg = false;
+                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.car_200south = false;
+                                                    Demo.yichang_south = false;
+
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -2249,94 +2233,50 @@ class input_one extends Thread {
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
-                                                    Demo.map.remove(2);
-                                                    //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
-                                                    Demo.car_200south = false;
+
                                                     //报警信息状态改变
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                    //Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从上半段驶离");
                                                 } else{//上半段进车 下半段有车 记录进车识别标识
-                                                    Demo.map.put(1, dncodeHex((int) buffer[7]));
-                                                    //判断是170和185
-                                                    if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200 200上红灯
-                                                        Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton1.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton2.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[5] = (byte) 0x01;//170黄灯
-                                                        Demo.buf[6] = (byte) 0x04;//185红灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
-                                                        Demo.outMessage(Demo.buf);
-
-                                                        //Demo.carnumber_one_falg = true;
-                                                        Demo.carButton1.setVisible(true);
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
-                                                    } else {
-                                                        // 果是185 185黄灯亮 170,200,200上红灯
-                                                        Demo.redButton1.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton2.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[5] = (byte) 0x04;//170红灯
-                                                        Demo.buf[6] = (byte) 0x01;//185黄灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //Demo.carnumber_one_falg = true;
-                                                        Demo.carButton1.setVisible(true);
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
+                                                    if (Demo.yichang_south == false){
+                                                        if (Demo.map.get(1) == null){
+                                                            Demo.map.put(1, dncodeHex((int) buffer[7]));
+                                                            // 果是185 185黄灯亮 170,200,200上红灯
+                                                            Demo.redButton1.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton2.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton3.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton_200top.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200top.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[5] = (byte) 0x04;//170红灯
+                                                            Demo.buf[6] = (byte) 0x01;//185黄灯
+                                                            Demo.buf[7] = (byte) 0xA4;//200红灯 200上红灯 200下红灯
+                                                            Demo.outMessage(Demo.buf);
+                                                            //Demo.carnumber_one_falg = true;
+                                                            Demo.carButton1.setVisible(true);
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
+                                                        }else{
+                                                            System.out.println("已进车，请退至等候区等待下次识别！");
+                                                        }
+                                                    }else{
+                                                        System.out.println("下半段的车已进入上半区段，不允许闯红灯，请退至等候区等待下次识别！");
                                                     }
+
                                                 }
                                             }
                                         } else {//肯定是进车 map.size()==0
                                             //进车 记录进车识别标识
                                             Demo.map.put(1, dncodeHex((int) buffer[7]));
                                             //判断是170和185
-                                            if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200 200上红灯 200下绿灯
-                                                Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton1.setIcon(Demo.YellowIcon);
-                                                Demo.redButton2.setIcon(Demo.RedIcon);
-                                                Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[5] = (byte) 0x01;//170黄灯
-                                                Demo.buf[6] = (byte) 0x04;//185红灯
-                                                Demo.buf[7] = (byte) 0x94;//200红灯 200上红灯 200下绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //车闪标识
-                                                //Demo.carnumber_one_falg = true;
-                                                Demo.carButton1.setVisible(true);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
-                                            } else {
+                                            if (buffer[4] == 12) {
                                                 // 果是185 185黄灯亮 170,200,200上红灯
                                                 Demo.redButton1.setIcon(Demo.RedIcon);
                                                 Demo.greenButton1.setIcon(Demo.GrayIcon);
@@ -2365,127 +2305,114 @@ class input_one extends Thread {
                                         }
                                     }
                                     if (!Demo.car_200.equals("00")){//200进车了
-                                        if (!car.equals(Demo.car_200)){//200的车从下半段走了，现在上半段可以进车,也可以出车,出的车只能是上半段进的车，200进的车还在下半段没出去
-                                            if (Demo.map.size()==1){//出车，但200的车还没出去，170 185 变绿灯，移除key1
-                                                if (car.equals(Demo.map.get(1))){
-                                                    Demo.map.remove(1);
-                                                    Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton1.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton2.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[5] = (byte) 0x02;//170绿灯
-                                                    Demo.buf[6] = (byte) 0x02;//185绿灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
-                                                }else {
-                                                    System.out.println("上半段和200已进车，请退至等候区等待下次识别！");
-                                                }
-                                            } else {//进车
-                                                //进车 记录进车识别标识
-                                                Demo.map.put(1, dncodeHex((int) buffer[7]));
-                                                //判断是170和185
-                                                if (buffer[4] == 11) {//如果是170 170黄灯亮，185，200上红灯200下绿灯，200黄灯
-                                                    Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton1.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton2.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[5] = (byte) 0x01;//170黄灯
-                                                    Demo.buf[6] = (byte) 0x04;//185红灯
-                                                    Demo.buf[7] = (byte) 0x91;//200上红灯200下绿灯，200黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //车闪标识
-                                                    //Demo.carnumber_one_falg = true;
-                                                    Demo.carButton1.setVisible(true);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从-170处驶入");
-                                                } else {
-                                                    // 果是185 185黄灯亮 170,200上红灯
-                                                    Demo.redButton1.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton2.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200top.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200top.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[5] = (byte) 0x04;//170红灯
-                                                    Demo.buf[6] = (byte) 0x01;//185黄灯
-                                                    Demo.buf[7] = (byte) 0x91;//200上红灯200下绿灯，200黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //车闪标识
-                                                    //Demo.carnumber_one_falg = true;
-                                                    Demo.carButton1.setVisible(true);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
+                                        if (Demo.yichang200 == false){
+                                            if (!car.equals(Demo.car_200)){//200的车从下半段走了，现在上半段可以进车,也可以出车,出的车只能是上半段进的车，200进的车还在下半段没出去
+                                                if (Demo.map.size()==1){//出车，但200的车还没出去，170 185 变绿灯，移除key1
+                                                    if (car.equals(Demo.map.get(1))){
+                                                        Demo.map.remove(1);
+                                                        Demo.redButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton1.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton2.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton2.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton2.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[5] = (byte) 0x02;//170绿灯
+                                                        Demo.buf[6] = (byte) 0x02;//185绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                        //提示信息
+                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                        Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+                                                    }else {
+                                                        System.out.println("上半段和200已进车，请退至等候区等待下次识别！");
+                                                    }
+                                                } else {//进车
+                                                    //进车 记录进车识别标识
+                                                    if (Demo.car_200south == true ){
+                                                        Demo.map.put(1, dncodeHex((int) buffer[7]));
+                                                        //判断是170和185
+                                                        if (buffer[4] == 12) {
+                                                            // 果是185 185黄灯亮 170,200上红灯
+                                                            Demo.redButton1.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton1.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton2.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton2.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton_200top.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200top.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[5] = (byte) 0x04;//170红灯
+                                                            Demo.buf[6] = (byte) 0x01;//185黄灯
+                                                            Demo.buf[7] = (byte) 0x91;//200上红灯200下绿灯，200黄灯
+                                                            Demo.outMessage(Demo.buf);
+                                                            //车闪标识
+                                                            //Demo.carnumber_one_falg = true;
+                                                            Demo.carButton1.setVisible(true);
+                                                            //提示信息
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_top.setText("车辆编号"+car+"从-185处驶入");
+                                                        }
+                                                    }else{
+                                                        System.out.println("不允许闯红灯，请退至等候区等待下次识别！");
+                                                    }
                                                 }
                                             }
-
-                                        }
-                                        if (car.equals(Demo.car_200)){//从200进的车要从上段出车，移除car_200
-                                            Demo.car_200 = "00";
-                                            //Demo.carnumber_one_falg = false;
-                                            Demo.carButton1.setVisible(false);
-                                            if (Demo.map.size()==0){//下半段没有车进来，1，2，3变绿灯
-                                                Demo.redButton1.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton1.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton1.setIcon(Demo.GrayIcon);
-                                                Demo.redButton2.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton2.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton3.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[5] = (byte) 0x02;//170绿灯
-                                                Demo.buf[6] = (byte) 0x02;//185绿灯灯
-                                                Demo.buf[7] = (byte) 0x52;//200上绿灯200下绿灯，200绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
-                                            }else{//下半段有车进来
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
-                                                if (!Demo.car_200south){//下半段车没到200c处，灯变
+                                            if (car.equals(Demo.car_200)){//从200进的车要从上段出车，移除car_200
+                                                Demo.car_200 = "00";
+                                                Demo.yichang200 = false;
+                                                Demo.yichang200_top = false;
+                                                Demo.yichang200_south = false;
+                                                //Demo.carnumber_one_falg = false;
+                                                Demo.carButton1.setVisible(false);
+                                                if (Demo.map.size()==0){//下半段没有车进来，1，2，3变绿灯
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
                                                     Demo.redButton2.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton2.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton3.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.greenButton3.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton3.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
                                                     Demo.buf[5] = (byte) 0x02;//170绿灯
-                                                    Demo.buf[6] = (byte) 0x02;//185绿灯
-                                                    Demo.buf[7] = (byte) 0x64;//200上绿灯200下红灯，200红灯
+                                                    Demo.buf[6] = (byte) 0x02;//185绿灯灯
+                                                    Demo.buf[7] = (byte) 0x52;//200上绿灯200下绿灯，200绿灯
                                                     Demo.outMessage(Demo.buf);
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+                                                }else{//下半段有车进来
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                    Demo.carId_top.setText("车辆编号"+car+"从上半段驶离");
+                                                    if (!Demo.car_200south){//下半段车没到200c处，灯变
+                                                        Demo.redButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton1.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton1.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton2.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton2.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton2.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton3.setIcon(Demo.RedIcon);
+                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[5] = (byte) 0x02;//170绿灯
+                                                        Demo.buf[6] = (byte) 0x02;//185绿灯
+                                                        Demo.buf[7] = (byte) 0x64;//200上绿灯200下红灯，200红灯
+                                                        Demo.outMessage(Demo.buf);
+                                                    }
                                                 }
                                             }
+                                        }else{
+                                            System.out.println("不允许闯红灯，请退至等候区等待下次识别！");
                                         }
+
                                     }
 
                                     Demo.chongfu185_1 = dncodeHex((int) buffer[4]);
@@ -2503,8 +2430,8 @@ class input_one extends Thread {
                                         Demo.carnumber_one = dncodeHex((int) buffer[7]);
                                         if (Demo.car_200.equals("00")){//说明200没进车
                                             if (Demo.map.size() == 2) {//说明通道内有两辆车，需要错车
-
                                                 if (Demo.carnumber_one.equals(Demo.map.get(1))) {//如果是上边来的车，上边的车先避让，200上变绿灯，200下红灯，200红灯
+                                                    Demo.yichang_top = true;//触发闯红灯异常
                                                     Demo.cuoche_flag = true;
                                                     if (Demo.birang_flag == false){
                                                         Demo.redButton_200top.setIcon(Demo.GrayIcon);
@@ -2541,16 +2468,20 @@ class input_one extends Thread {
                                                 }
                                             }
                                             if (Demo.map.size()==1){//说明通道内有一辆车
-                                                /*if (Demo.carnumber_one.equals(Demo.map.get(2))){//检测到下半段来车，下半段变绿灯
-                                                    Demo.redButton_200top.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton_200top.setIcon(Demo.GreenIcon);
+                                                if (Demo.carnumber_one.equals(Demo.map.get(2))){//检测到下半段来车，下半段变绿灯
+                                                    Demo.map.put(1,Demo.map.get(2));
+                                                    Demo.map.remove(2);
+
+                                                    Demo.redButton_200top.setIcon(Demo.RedIcon);
+                                                    Demo.greenButton_200top.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
                                                     Demo.redButton_200south.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton_200south.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GreenIcon);
+                                                    Demo.redButton3.setIcon(Demo.RedIcon);
+                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton3.setIcon(Demo.GrayIcon);
+
                                                     Demo.redButton4.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton4.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton4.setIcon(Demo.GrayIcon);
@@ -2561,13 +2492,19 @@ class input_one extends Thread {
                                                     Demo.greenButton6.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton6.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
-                                                    Demo.buf[7] = (byte)0x52;//200上绿灯 200下绿灯 200绿灯
+                                                    Demo.buf[7] = (byte)0x94;//200上红灯 200下绿灯 200红灯
                                                     Demo.buf[8] = (byte)0x02;//215绿灯
                                                     Demo.buf[9] = (byte)0x02;//230绿灯
                                                     Demo.buf[10] = (byte)0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
-                                                }*/
+
+
+                                                   //转换车闪标识
+                                                    Demo.carButton2.setVisible(false);
+                                                    Demo.carButton1.setVisible(true);
+                                                }
                                                 if (Demo.carnumber_one.equals(Demo.map.get(1))){//检测到上半段来车，下半段不允许进车了，变红灯
+                                                    Demo.yichang_top = true; //触发闯红灯异常
                                                     Demo.redButton4.setIcon(Demo.RedIcon);
                                                     Demo.greenButton4.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton4.setIcon(Demo.GrayIcon);
@@ -2588,6 +2525,11 @@ class input_one extends Thread {
                                         }
                                         if (!Demo.car_200.equals("00")){//说明200进车了
                                             if(Demo.carnumber_one.equals(Demo.car_200)){//说明是200进的车往上边走了，下半区段4,5,6变绿灯 200上变红灯
+                                               //触发异常标识
+                                                Demo.yichang200 = false;
+                                                Demo.yichang200_top = true;
+                                                Demo.yichang200_south = false;
+
                                                 Demo.redButton4.setIcon(Demo.GrayIcon);
                                                 Demo.greenButton4.setIcon(Demo.GreenIcon);
                                                 Demo.yellowButton4.setIcon(Demo.GrayIcon);
@@ -2604,7 +2546,7 @@ class input_one extends Thread {
                                                 //车闪标识
                                                 //Demo.carnumber_one_falg = true;
                                                 Demo.carButton1.setVisible(true);
-                                                Demo.buf[7] = (byte) 0x02; //200黄 ，200上红 200下绿
+                                                Demo.buf[7] = (byte) 0x91; //200黄 ，200上红 200下绿
                                                 Demo.buf[8] = (byte) 0x02;//215绿灯
                                                 Demo.buf[9] = (byte) 0x02;//230绿灯
                                                 Demo.buf[10] = (byte) 0x02;//245绿灯
@@ -2673,7 +2615,7 @@ class input_one extends Thread {
                                             continue;
                                         }
                                         Demo.carnumber_two = dncodeHex((int) buffer[7]);
-                                        if (Demo.car_200.equals("00")){//说明200没进车
+                                        if (Demo.car_200.equals("00")){//说明200没进车或者200的车出去了
                                             if (Demo.map.size() == 2) {//说明通道内有两辆车，需要错车
                                                 if (Demo.carnumber_two.equals(Demo.map.get(1))) {//如果是上边来的车，说明下边的车在避让，200上变绿灯
                                                     Demo.redButton_200top.setIcon(Demo.GrayIcon);
@@ -2688,6 +2630,7 @@ class input_one extends Thread {
                                                 }
                                                 if (Demo.carnumber_two.equals(Demo.map.get(2))) {//如果是下边来的车，说明下边的车先进行避让，200下变绿灯200上红灯 200红灯
                                                     Demo.cuoche_flag = true;
+                                                    Demo.yichang_south = true;//触发上半段闯红灯异常
                                                     if (Demo.birang_flag==false){
                                                         //200上
                                                         Demo.redButton_200top.setIcon(Demo.RedIcon);
@@ -2710,6 +2653,7 @@ class input_one extends Thread {
                                             }
                                             if (Demo.map.size()==1){//说明通道内有一辆车
                                                 if (Demo.carnumber_two.equals(Demo.map.get(2))){//检测到下半段来车，上半段不允许进车了，变红灯
+                                                    Demo.yichang_south = true; //触发闯红灯异常
                                                     Demo.redButton1.setIcon(Demo.RedIcon);
                                                     Demo.greenButton1.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -2725,7 +2669,11 @@ class input_one extends Thread {
                                                     Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯，200红灯
                                                     Demo.outMessage(Demo.buf);
                                                 }
-                                               /* if (Demo.carnumber_two.equals(Demo.map.get(1))){//检测到上半段来车，上半段变绿灯
+                                                if (Demo.carnumber_two.equals(Demo.map.get(1))){//检测到上半段来车，上半段变绿灯
+                                                    //转换存放位置
+                                                    Demo.map.put(2,Demo.map.get(1));
+                                                    Demo.map.remove(1);
+
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -2738,19 +2686,28 @@ class input_one extends Thread {
                                                     Demo.redButton_200top.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton_200top.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton_200top.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GreenIcon);
+                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
                                                     Demo.buf[5] = (byte) 0x02;//170绿灯
                                                     Demo.buf[6] = (byte) 0x02;//185绿灯
-                                                    Demo.buf[7] = (byte) 0x54;//200上绿灯 200下绿灯，200红灯
+                                                    Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯，200红灯
                                                     Demo.outMessage(Demo.buf);
-                                                }*/
+                                                  //转换车闪标识
+                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.carButton2.setVisible(true);
+                                                }
                                             }
                                         }
                                         if (!Demo.car_200.equals("00")){//说明200进车了
                                             if (Demo.carnumber_two.equals(Demo.car_200)){//200进的车往下半段走，上半段变绿灯 200下变红灯 200上绿灯 200黄灯
+                                                //触发异常标识
+                                                Demo.yichang200 = false;
+                                                Demo.yichang200_south = true;
+                                                Demo.yichang200_top = false;
+
+
                                                 Demo.redButton1.setIcon(Demo.GrayIcon);
                                                 Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                 Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -2777,13 +2734,9 @@ class input_one extends Thread {
                                                 Demo.redButton2.setIcon(Demo.RedIcon);
                                                 Demo.greenButton2.setIcon(Demo.GrayIcon);
                                                 Demo.yellowButton2.setIcon(Demo.GrayIcon);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
                                                 //输出控制信号灯
                                                 Demo.buf[5] = (byte) 0x04;//170红灯
                                                 Demo.buf[6] = (byte) 0x04;//185红灯
-                                                Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
                                                 Demo.outMessage(Demo.buf);
                                             }
                                         }
@@ -2929,8 +2882,12 @@ class input_one extends Thread {
                                                 System.out.println("已进车，请退至等候区等待下次识别");
                                             }
                                         }else {//map.size == 0，肯定是进车，全部变红灯，只有200的车能行驶，同时记录200标识
-                                            if (Demo.car_200.equals("00")){//200还没有车进来
+                                            if (Demo.car_200.equals("00")){//200还没有车进来 200进车
                                                 Demo.car_200 =dncodeHex((int) buffer[7]);
+                                                Demo.yichang200 = true;
+                                                Demo.yichang200_top = false;
+                                                Demo.yichang200_south = false;
+
                                                 Demo.redButton1.setIcon(Demo.RedIcon);
                                                 Demo.greenButton1.setIcon(Demo.GrayIcon);
                                                 Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -2962,6 +2919,10 @@ class input_one extends Thread {
                                                 Demo.carId_top.setText("车辆编号"+car+"从-200处驶入");
                                             }else{//200有车进来
                                                 if (car.equals(Demo.car_200)){//从200进的车从200出去了
+                                                    Demo.yichang200 = false;
+                                                    Demo.yichang200_top = false;
+                                                    Demo.yichang200_south = false;
+
                                                     //全绿灯
                                                     Demo.car_200 = "00";
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -3032,13 +2993,17 @@ class input_one extends Thread {
                                                 if (car.equals(Demo.map.get(1))){//上半段车出车，移除key1
                                                     Demo.map.remove(1);
                                                     //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.yichang_top = false; //解除触发闯红灯异常
+                                                    Demo.car_200top = false;
+                                                    Demo.carButton2.setVisible(false);
                                                     //提示信息
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                     Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                                 }
                                                 if (car.equals(Demo.map.get(2))){//下半段车出车，移除key2
                                                     Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton2.setVisible(false);
                                                     //提示信息
@@ -3088,6 +3053,8 @@ class input_one extends Thread {
                                             if (Demo.map.get(2)!=null){//下半段进的车
                                                 if (car.equals(Demo.map.get(2))){//出车
                                                     Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton2.setVisible(false);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
@@ -3128,10 +3095,12 @@ class input_one extends Thread {
                                             }
                                             if (Demo.map.get(1)!=null){//上半段进来的车
                                                 if (car.equals(Demo.map.get(1))) {//上半段车出车
-                                                    Demo.map.remove(1);
-                                                    //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.yichang_top = false; //解除触发闯红灯异常
                                                     Demo.car_200top = false;
+                                                    Demo.map.remove(1);
+                                                    //转换车闪标识
+                                                    //Demo.carnumber_one_falg = false;
+                                                    Demo.carButton2.setVisible(false);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
                                                     Demo.yellowButton1.setIcon(Demo.GrayIcon);
@@ -3165,90 +3134,45 @@ class input_one extends Thread {
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                                     Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                                 }else{//下半段进车，上半段有车
-                                                    Demo.map.put(2, dncodeHex((int) buffer[7]));
-                                                    //判断是215、230、245
-                                                    if (buffer[4] == 14) {//如果是215 215黄灯亮，200 ,230，245红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton5.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton6.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                        Demo.buf[9] = (byte) 0x04;//230红灯
-                                                        Demo.buf[10] = (byte) 0x04;//245红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                                    } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200,215,245红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton6.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x04;//215红灯
-                                                        Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                        Demo.buf[10] = (byte) 0x04;//245红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                                    } else { //如果是245 245黄灯亮 200,215、230红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton5.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x04;//215红灯
-                                                        Demo.buf[9] = (byte) 0x04;//230红灯
-                                                        Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
+                                                    if (Demo.yichang_top == false){
+                                                        if (Demo.map.get(2) == null){
+                                                            Demo.map.put(2, dncodeHex((int) buffer[7]));
+                                                            //判断是215、230、245
+                                                            if (buffer[4] == 14) {//如果是215 215黄灯亮，200 ,230，245红灯
+                                                                //Demo.carnumber_two_falg = true;
+                                                                Demo.carButton2.setVisible(true);
+                                                                Demo.redButton3.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton4.setIcon(Demo.YellowIcon);
+                                                                Demo.redButton5.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton6.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
+                                                                //输出控制信号灯
+                                                                Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
+                                                                Demo.buf[8] = (byte) 0x01;//215黄灯
+                                                                Demo.buf[9] = (byte) 0x04;//230红灯
+                                                                Demo.buf[10] = (byte) 0x04;//245红灯
+                                                                Demo.outMessage(Demo.buf);
+                                                                //提示信息
+                                                                Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                                Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
+                                                            }
+                                                        }else{
+                                                            System.out.println("已进车，请退至等候区等待下次识别！");
+                                                        }
+                                                    }else {
+                                                        System.out.println("上半段的车已进入下半区段,不允许闯红灯，请退至等候区等待下次识别！");
                                                     }
+
                                                 }
                                             }
                                         } else {//肯定是进车 记录进车识别标识 map.size()==0
@@ -3281,218 +3205,88 @@ class input_one extends Thread {
                                                 //提示信息
                                                 Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                 Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                            } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200，215,245红灯
-                                                //Demo.carnumber_two_falg = true;
-                                                Demo.carButton2.setVisible(true);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.RedIcon);
-                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                Demo.redButton6.setIcon(Demo.RedIcon);
-                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯 200红灯
-                                                Demo.buf[8] = (byte) 0x04;//215红灯
-                                                Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                Demo.buf[10] = (byte) 0x04;//245红灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                            } else { //如果是245 245黄灯亮 200， 215、230红灯
-                                                //Demo.carnumber_two_falg = true;
-                                                Demo.carButton2.setVisible(true);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.RedIcon);
-                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.RedIcon);
-                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯 200红灯
-                                                Demo.buf[8] = (byte) 0x04;//215红灯
-                                                Demo.buf[9] = (byte) 0x04;//230红灯
-                                                Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
                                             }
                                         }
                                     }
                                     if (!Demo.car_200.equals("00")){//200进车了
-                                        if (!car.equals(Demo.car_200)){//200进的车往上半区段走了，判断此时下半段的车是进车出车
-                                            if (Demo.map.size()==1){
-                                                if (car.equals(Demo.map.get(2))){//出车，此时200进的车还没从上半段出去
-                                                    Demo.map.remove(2);
-                                                    //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
-                                                    Demo.car_200south = false;
-                                                    // 4,5,6变绿灯
-                                                    Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[8] = (byte) 0x02;//215绿灯
-                                                    Demo.buf[9] = (byte) 0x02;//230绿灯
-                                                    Demo.buf[10] = (byte) 0x02;//245绿灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                                }else{
-                                                    System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
-                                                }
-                                            }else{//进车
-                                                Demo.map.put(2, dncodeHex((int) buffer[7]));
-                                                //判断是215、230、245
-                                                if (buffer[4] == 14) {//如果是215 215黄灯亮，200黄灯 ，230，245红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton5.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                    Demo.buf[9] = (byte) 0x04;//230红灯
-                                                    Demo.buf[10] = (byte) 0x04;//245红灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton6.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x04;//215红灯
-                                                    Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                    Demo.buf[10] = (byte) 0x04;//245红灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                    System.out.println("5号站进车！");
-                                                } else { //如果是245 245黄灯亮 200， 215、230红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x04;//215红灯
-                                                    Demo.buf[9] = (byte) 0x04;//230红灯
-                                                    Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
+                                        if (Demo.yichang200 == false){
+                                            if (!car.equals(Demo.car_200)){//200进的车往上半区段走了，判断此时下半段的车是进车出车
+                                                if (Demo.map.size()==1){
+                                                    if (car.equals(Demo.map.get(2))){//出车，此时200进的车还没从上半段出去
+                                                        Demo.map.remove(2);
+                                                        //Demo.carnumber_two_falg = false;
+                                                        Demo.carButton2.setVisible(false);
+                                                        Demo.car_200south = false;
+                                                        // 4,5,6变绿灯
+                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton4.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton5.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton6.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[8] = (byte) 0x02;//215绿灯
+                                                        Demo.buf[9] = (byte) 0x02;//230绿灯
+                                                        Demo.buf[10] = (byte) 0x02;//245绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                        //提示信息
+                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                    }else{
+                                                        System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
+                                                    }
+                                                }else{//进车
+                                                    if (Demo.yichang200_top == true){
+                                                        Demo.map.put(2, dncodeHex((int) buffer[7]));
+                                                        //判断是215、230、245
+                                                        if (buffer[4] == 14) {//如果是215 215黄灯亮，200黄灯 ，230，245红灯
+                                                            Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton4.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton4.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton5.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton5.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton6.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton6.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200south.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
+                                                            Demo.buf[8] = (byte) 0x01;//215黄灯
+                                                            Demo.buf[9] = (byte) 0x04;//230红灯
+                                                            Demo.buf[10] = (byte) 0x04;//245红灯
+                                                            Demo.outMessage(Demo.buf);
+                                                            //提示信息
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
+                                                            //车闪标识
+                                                            //Demo.carnumber_two_falg = true;
+                                                            Demo.carButton2.setVisible(true);
+                                                        }
+                                                    }else{
+                                                        System.out.println("闯红灯，请退至等候区等待下次识别！");
+                                                    }
                                                 }
                                             }
-
-                                        }
-                                        if (car.equals(Demo.car_200)){//说明从200进的车要出车
-                                            Demo.car_200 = "00";
-                                            //车闪标识
-                                            //Demo.carnumber_two_falg = false;
-                                            Demo.carButton2.setVisible(false);
-                                            if (Demo.map.size()==0){//上半段没有车进来 3，4，5，6变绿灯
-                                                Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton3.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton4.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton5.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton6.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x52;//200上绿灯 200下绿灯 200绿灯
-                                                Demo.buf[8] = (byte) 0x02;//215绿灯
-                                                Demo.buf[9] = (byte) 0x02;//230绿灯
-                                                Demo.buf[10] = (byte) 0x02;//245绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                            }else{//上半段有车进来
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                                if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
-                                                    Demo.redButton3.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                            if (car.equals(Demo.car_200)){//说明从200进的车要出车
+                                                Demo.car_200 = "00";
+                                                Demo.yichang200 = false;
+                                                Demo.yichang200_top = false;
+                                                Demo.yichang200_south = false;
+                                                //车闪标识
+                                                //Demo.carnumber_two_falg = false;
+                                                Demo.carButton2.setVisible(false);
+                                                if (Demo.map.size()==0){//上半段没有车进来 3，4，5，6变绿灯
+                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.greenButton3.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton3.setIcon(Demo.GrayIcon);
                                                     Demo.redButton4.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton4.setIcon(Demo.GreenIcon);
@@ -3504,13 +3298,42 @@ class input_one extends Thread {
                                                     Demo.greenButton6.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton6.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x94;//200上红灯 200下绿灯 200红灯
+                                                    Demo.buf[7] = (byte) 0x52;//200上绿灯 200下绿灯 200绿灯
                                                     Demo.buf[8] = (byte) 0x02;//215绿灯
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                }else{//上半段有车进来
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                    if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
+                                                        Demo.redButton3.setIcon(Demo.RedIcon);
+                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton4.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton5.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton6.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[7] = (byte) 0x94;//200上红灯 200下绿灯 200红灯
+                                                        Demo.buf[8] = (byte) 0x02;//215绿灯
+                                                        Demo.buf[9] = (byte) 0x02;//230绿灯
+                                                        Demo.buf[10] = (byte) 0x02;//245绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                    }
                                                 }
                                             }
+                                        }else{
+                                            System.out.println("闯红灯，请退至等候区等待下次识别！");
                                         }
                                     }
                                     Demo.chongfu215_1 = dncodeHex((int) buffer[4]);
@@ -3529,15 +3352,19 @@ class input_one extends Thread {
                                         if (Demo.map.size()==2){//肯定是出车
                                             if (car.equals(Demo.map.get(1)) || car.equals(Demo.map.get(2))){
                                                 if (car.equals(Demo.map.get(1))){//上半段车出车，移除key1
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
                                                     Demo.map.remove(1);
                                                     //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.carButton2.setVisible(false);
                                                     //提示信息
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                     Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                                 }
                                                 if (car.equals(Demo.map.get(2))){//下半段车出车，移除key2
                                                     Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton2.setVisible(false);
                                                     //提示信息
@@ -3587,6 +3414,8 @@ class input_one extends Thread {
                                             if (Demo.map.get(2)!=null){//下半段进的车
                                                 if (car.equals(Demo.map.get(2))){//出车
                                                     Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton2.setVisible(false);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
@@ -3627,9 +3456,10 @@ class input_one extends Thread {
                                             }
                                             if (Demo.map.get(1)!=null){//上半段进来的车
                                                 if (car.equals(Demo.map.get(1))) {//上半段车出车
+                                                    Demo.yichang_top = false;
                                                     Demo.map.remove(1);
                                                     //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.carButton2.setVisible(false);
                                                     Demo.car_200top = false;
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -3664,124 +3494,51 @@ class input_one extends Thread {
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                                     Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                                 }else{//下半段进车，上半段有车
-                                                    Demo.map.put(2, dncodeHex((int) buffer[7]));
-                                                    //判断是215、230、245
-                                                    if (buffer[4] == 14) {//如果是215 215黄灯亮，200 ,230，245红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton5.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton6.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                        Demo.buf[9] = (byte) 0x04;//230红灯
-                                                        Demo.buf[10] = (byte) 0x04;//245红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                                    } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200,215,245红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton6.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x04;//215红灯
-                                                        Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                        Demo.buf[10] = (byte) 0x04;//245红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-
-                                                    } else { //如果是245 245黄灯亮 200,215、230红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton5.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x04;//215红灯
-                                                        Demo.buf[9] = (byte) 0x04;//230红灯
-                                                        Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
+                                                    if (Demo.yichang_top == false){
+                                                        if (Demo.map.get(2) == null){
+                                                            Demo.map.put(2, dncodeHex((int) buffer[7]));
+                                                            //判断是215、230、245
+                                                            if (buffer[4] == 15) {//如果是230 230黄灯亮 200,215,245红灯
+                                                                //Demo.carnumber_two_falg = true;
+                                                                Demo.carButton2.setVisible(true);
+                                                                Demo.redButton3.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton4.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton5.setIcon(Demo.YellowIcon);
+                                                                Demo.redButton6.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
+                                                                //输出控制信号灯
+                                                                Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
+                                                                Demo.buf[8] = (byte) 0x04;//215红灯
+                                                                Demo.buf[9] = (byte) 0x01;//230黄灯
+                                                                Demo.buf[10] = (byte) 0x04;//245红灯
+                                                                Demo.outMessage(Demo.buf);
+                                                                //提示信息
+                                                                Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                                Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
+                                                            }
+                                                        }else{
+                                                            System.out.println("已进车，请退至等候区等待下次识别！");
+                                                        }
+                                                    }else{
+                                                        System.out.println("上半段的车已进入下半区段,不允许闯红灯，请退至等候区等待下次识别！");
                                                     }
+
                                                 }
                                             }
                                         } else {//肯定是进车 记录进车识别标识 map.size()==0
                                             Demo.map.put(2, dncodeHex((int) buffer[7]));
                                             //判断是215、230、245
-                                            if (buffer[4] == 14) {//如果是215 215黄灯亮，200，230，245红灯
-                                                //Demo.carnumber_two_falg = true;
-                                                Demo.carButton2.setVisible(true);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                Demo.redButton5.setIcon(Demo.RedIcon);
-                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.RedIcon);
-                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯 200红灯
-                                                Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                Demo.buf[9] = (byte) 0x04;//230红灯
-                                                Demo.buf[10] = (byte) 0x04;//245红灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                            } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200，215,245红灯
+                                            if (buffer[4] == 15) {//如果是230 230黄灯亮 200，215,245红灯
                                                 //Demo.carnumber_two_falg = true;
                                                 Demo.carButton2.setVisible(true);
                                                 Demo.redButton3.setIcon(Demo.RedIcon);
@@ -3808,190 +3565,85 @@ class input_one extends Thread {
                                                 //提示信息
                                                 Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                 Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                            } else { //如果是245 245黄灯亮 200， 215、230红灯
-                                                //Demo.carnumber_two_falg = true;
-                                                Demo.carButton2.setVisible(true);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.RedIcon);
-                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.RedIcon);
-                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯 200红灯
-                                                Demo.buf[8] = (byte) 0x04;//215红灯
-                                                Demo.buf[9] = (byte) 0x04;//230红灯
-                                                Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
                                             }
                                         }
                                     }
                                     if (!Demo.car_200.equals("00")){//200进车了
-                                        if (!car.equals(Demo.car_200)){//200进的车往上半区段走了，判断此时下半段的车是进车出车
-                                            if (Demo.map.size()==1){
-                                                if (car.equals(Demo.map.get(2))){//出车，此时200进的车还没从上半段出去
-                                                    Demo.map.remove(2);
-                                                    //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
-                                                    // 4,5,6变绿灯
-                                                    Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[8] = (byte) 0x02;//215绿灯
-                                                    Demo.buf[9] = (byte) 0x02;//230绿灯
-                                                    Demo.buf[10] = (byte) 0x02;//245绿灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                                }else{
-                                                    System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
+                                        if (Demo.yichang200 == false ){
+                                            if (!car.equals(Demo.car_200)){//200进的车往上半区段走了，判断此时下半段的车是进车出车
+                                                if (Demo.map.size()==1){
+                                                    if (car.equals(Demo.map.get(2))){//出车，此时200进的车还没从上半段出去
+                                                        Demo.map.remove(2);
+                                                        //Demo.carnumber_two_falg = false;
+                                                        Demo.carButton2.setVisible(false);
+                                                        // 4,5,6变绿灯
+                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton4.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton5.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton6.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[8] = (byte) 0x02;//215绿灯
+                                                        Demo.buf[9] = (byte) 0x02;//230绿灯
+                                                        Demo.buf[10] = (byte) 0x02;//245绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                        //提示信息
+                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                    }else{
+                                                        System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
+                                                    }
+                                                }else{//进车
+                                                    if (Demo.yichang200_top == true ){
+                                                        Demo.map.put(2, dncodeHex((int) buffer[7]));
+                                                        //判断是215、230、245
+                                                        if (buffer[4] == 15) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
+                                                            Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton4.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton4.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton5.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton5.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton6.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton6.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200south.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
+                                                            Demo.buf[8] = (byte) 0x04;//215红灯
+                                                            Demo.buf[9] = (byte) 0x01;//230黄灯
+                                                            Demo.buf[10] = (byte) 0x04;//245红灯
+                                                            Demo.outMessage(Demo.buf);
+                                                            //提示信息
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
+                                                            //车闪标识
+                                                            //Demo.carnumber_two_falg = true;
+                                                            Demo.carButton2.setVisible(true);
+                                                        }
+                                                    }else{
+                                                        System.out.println("闯红灯，请退至等候区等待下次识别！");
+                                                    }
                                                 }
-                                            }else{//进车
-                                                Demo.map.put(2, dncodeHex((int) buffer[7]));
-                                                //判断是215、230、245
-                                                if (buffer[4] == 14) {//如果是215 215黄灯亮，200黄灯 ，230，245红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton5.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                    Demo.buf[9] = (byte) 0x04;//230红灯
-                                                    Demo.buf[10] = (byte) 0x04;//245红灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton6.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x04;//215红灯
-                                                    Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                    Demo.buf[10] = (byte) 0x04;//245红灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                    System.out.println("5号站进车！");
-                                                } else { //如果是245 245黄灯亮 200， 215、230红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x04;//215红灯
-                                                    Demo.buf[9] = (byte) 0x04;//230红灯
-                                                    Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                }
-                                            }
 
-                                        }
-                                        if (car.equals(Demo.car_200)){//说明从200进的车要出车
-                                            Demo.car_200 = "00";
-                                            //车闪标识
-                                            //Demo.carnumber_two_falg = false;
-                                            Demo.carButton2.setVisible(false);
-                                            if (Demo.map.size()==0){//上半段没有车进来 3，4，5，6变绿灯
-                                                Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton3.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton4.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton5.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton6.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x52;//200上绿灯 200下绿灯 200绿灯
-                                                Demo.buf[8] = (byte) 0x02;//215绿灯
-                                                Demo.buf[9] = (byte) 0x02;//230绿灯
-                                                Demo.buf[10] = (byte) 0x02;//245绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                            }else{//上半段有车进来
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                                if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
-                                                    Demo.redButton3.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                            }
+                                            if (car.equals(Demo.car_200)){//说明从200进的车要出车
+                                                Demo.car_200 = "00";
+                                                //车闪标识
+                                                //Demo.carnumber_two_falg = false;
+                                                Demo.carButton2.setVisible(false);
+                                                if (Demo.map.size()==0){//上半段没有车进来 3，4，5，6变绿灯
+                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.greenButton3.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton3.setIcon(Demo.GrayIcon);
                                                     Demo.redButton4.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton4.setIcon(Demo.GreenIcon);
@@ -4003,14 +3655,44 @@ class input_one extends Thread {
                                                     Demo.greenButton6.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton6.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x94;//200上红灯 200下绿灯 200红灯
+                                                    Demo.buf[7] = (byte) 0x52;//200上绿灯 200下绿灯 200绿灯
                                                     Demo.buf[8] = (byte) 0x02;//215绿灯
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                }else{//上半段有车进来
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                    if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
+                                                        Demo.redButton3.setIcon(Demo.RedIcon);
+                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton4.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton5.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton6.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[7] = (byte) 0x94;//200上红灯 200下绿灯 200红灯
+                                                        Demo.buf[8] = (byte) 0x02;//215绿灯
+                                                        Demo.buf[9] = (byte) 0x02;//230绿灯
+                                                        Demo.buf[10] = (byte) 0x02;//245绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                    }
                                                 }
                                             }
+                                        }else{
+                                            System.out.println("闯红灯，请退至等候区等待下次识别！");
                                         }
+
                                     }
                                     Demo.chongfu230_1 = dncodeHex((int) buffer[4]);
                                     Demo.chongfu230_2 = dncodeHex((int) buffer[5]);
@@ -4029,14 +3711,20 @@ class input_one extends Thread {
                                         if (Demo.map.size()==2){//肯定是出车
                                             if (car.equals(Demo.map.get(1)) || car.equals(Demo.map.get(2))){
                                                 if (car.equals(Demo.map.get(1))){//上半段车出车，移除key1
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     Demo.map.remove(1);
                                                     //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.carButton2.setVisible(false);
                                                     //提示信息
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:01");
                                                     Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                                 }
                                                 if (car.equals(Demo.map.get(2))){//下半段车出车，移除key2
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     Demo.map.remove(2);
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton2.setVisible(false);
@@ -4087,6 +3775,9 @@ class input_one extends Thread {
                                             if (Demo.map.get(2)!=null){//下半段进的车
                                                 if (car.equals(Demo.map.get(2))){//出车
                                                     Demo.map.remove(2);
+                                                    Demo.yichang_south = false;
+                                                    Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     //Demo.carnumber_two_falg = false;
                                                     Demo.carButton2.setVisible(false);
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
@@ -4127,9 +3818,12 @@ class input_one extends Thread {
                                             }
                                             if (Demo.map.get(1)!=null){//上半段进来的车
                                                 if (car.equals(Demo.map.get(1))) {//上半段车出车
+                                                    Demo.yichang_top = false;
+                                                    Demo.car_200top = false;
+                                                    Demo.car_200south = false;
                                                     Demo.map.remove(1);
                                                     //Demo.carnumber_one_falg = false;
-                                                    Demo.carButton1.setVisible(false);
+                                                    Demo.carButton2.setVisible(false);
                                                     Demo.car_200top = false;
                                                     Demo.greenButton1.setIcon(Demo.GreenIcon);
                                                     Demo.redButton1.setIcon(Demo.GrayIcon);
@@ -4164,151 +3858,50 @@ class input_one extends Thread {
                                                     Demo.car_numberJB.setText("当前巷道中车辆数量:00");
                                                     Demo.carId_top.setText("车辆编号"+car+"从下半段驶离");
                                                 }else{//下半段进车，上半段有车
-                                                    Demo.map.put(2, dncodeHex((int) buffer[7]));
-                                                    //判断是215、230、245
-                                                    if (buffer[4] == 14) {//如果是215 215黄灯亮，200 ,230，245红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton5.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton6.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                        Demo.buf[9] = (byte) 0x04;//230红灯
-                                                        Demo.buf[10] = (byte) 0x04;//245红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                                    } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200,215,245红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton6.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x04;//215红灯
-                                                        Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                        Demo.buf[10] = (byte) 0x04;//245红灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-
-                                                    } else { //如果是245 245黄灯亮 200,215、230红灯
-                                                        //Demo.carnumber_two_falg = true;
-                                                        Demo.carButton2.setVisible(true);
-                                                        Demo.redButton3.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton4.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton5.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                        Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                        Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                        Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                        //输出控制信号灯
-                                                        Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
-                                                        Demo.buf[8] = (byte) 0x04;//215红灯
-                                                        Demo.buf[9] = (byte) 0x04;//230红灯
-                                                        Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                        Demo.outMessage(Demo.buf);
-                                                        //提示信息
-                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                        Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
+                                                    if (Demo.yichang_top == false){
+                                                        if (Demo.map.get(2) == null){
+                                                            Demo.map.put(2, dncodeHex((int) buffer[7]));
+                                                            //判断是215、230、245
+                                                            if (buffer[4] == 16) {//如果是245 245黄灯亮 200,215、230红灯
+                                                                //Demo.carnumber_two_falg = true;
+                                                                Demo.carButton2.setVisible(true);
+                                                                Demo.redButton3.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton4.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton5.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                                Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton6.setIcon(Demo.YellowIcon);
+                                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
+                                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
+                                                                //输出控制信号灯
+                                                                Demo.buf[7] = (byte) 0xA4;//200上红灯 200下红灯 200红灯
+                                                                Demo.buf[8] = (byte) 0x04;//215红灯
+                                                                Demo.buf[9] = (byte) 0x04;//230红灯
+                                                                Demo.buf[10] = (byte) 0x01;//245黄灯
+                                                                Demo.outMessage(Demo.buf);
+                                                                //提示信息
+                                                                Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                                Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
+                                                            }
+                                                        }else{
+                                                            System.out.println("已进车。请退至等候区等待下次识别！");
+                                                        }
+                                                    }else {
+                                                        System.out.println("上半段的车已进入下半区段,不允许闯红灯，请退至等候区等待下次识别！");
                                                     }
                                                 }
                                             }
                                         } else {//肯定是进车 记录进车识别标识 map.size()==0
                                             Demo.map.put(2, dncodeHex((int) buffer[7]));
                                             //判断是215、230、245
-                                            if (buffer[4] == 14) {//如果是215 215黄灯亮，200，230，245红灯
-                                                //Demo.carnumber_two_falg = true;
-                                                Demo.carButton2.setVisible(true);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                Demo.redButton5.setIcon(Demo.RedIcon);
-                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.RedIcon);
-                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯 200红灯
-                                                Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                Demo.buf[9] = (byte) 0x04;//230红灯
-                                                Demo.buf[10] = (byte) 0x04;//245红灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                            } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200，215,245红灯
-                                                //Demo.carnumber_two_falg = true;
-                                                Demo.carButton2.setVisible(true);
-                                                Demo.redButton3.setIcon(Demo.RedIcon);
-                                                Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.RedIcon);
-                                                Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                Demo.redButton6.setIcon(Demo.RedIcon);
-                                                Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x64;//200上绿灯 200下红灯 200红灯
-                                                Demo.buf[8] = (byte) 0x04;//215红灯
-                                                Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                Demo.buf[10] = (byte) 0x04;//245红灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                            } else { //如果是245 245黄灯亮 200， 215、230红灯
+                                            if (buffer[4] == 16) {//如果是245 245黄灯亮 200， 215、230红灯
                                                 //Demo.carnumber_two_falg = true;
                                                 Demo.carButton2.setVisible(true);
                                                 Demo.redButton3.setIcon(Demo.RedIcon);
@@ -4339,158 +3932,82 @@ class input_one extends Thread {
                                         }
                                     }
                                     if (!Demo.car_200.equals("00")){//200进车了
-                                        if (!car.equals(Demo.car_200)){//200进的车往上半区段走了，判断此时下半段的车是进车出车
-                                            if (Demo.map.size()==1){
-                                                if (car.equals(Demo.map.get(2))){//出车，此时200进的车还没从上半段出去
-                                                    Demo.map.remove(2);
-                                                    //Demo.carnumber_two_falg = false;
-                                                    Demo.carButton2.setVisible(false);
-                                                    // 4,5,6变绿灯
-                                                    Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GreenIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[8] = (byte) 0x02;//215绿灯
-                                                    Demo.buf[9] = (byte) 0x02;//230绿灯
-                                                    Demo.buf[10] = (byte) 0x02;//245绿灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                                }else{
-                                                    System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
-                                                }
-                                            }else{//进车
-                                                Demo.map.put(2, dncodeHex((int) buffer[7]));
-                                                //判断是215、230、245
-                                                if (buffer[4] == 14) {//如果是215 215黄灯亮，200黄灯 ，230，245红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton5.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x01;//215黄灯
-                                                    Demo.buf[9] = (byte) 0x04;//230红灯
-                                                    Demo.buf[10] = (byte) 0x04;//245红灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-215处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                } else if (buffer[4] == 15) {//如果是230 230黄灯亮 200黄灯 ，215,245红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton6.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x04;//215红灯
-                                                    Demo.buf[9] = (byte) 0x01;//230黄灯
-                                                    Demo.buf[10] = (byte) 0x04;//245红灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-230处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                } else { //如果是245 245黄灯亮 200， 215、230红灯
-                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton3.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton4.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton5.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                    Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.greenButton6.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton6.setIcon(Demo.YellowIcon);
-                                                    Demo.redButton_200south.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton_200south.setIcon(Demo.GrayIcon);
-                                                    Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
-                                                    //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
-                                                    Demo.buf[8] = (byte) 0x04;//215红灯
-                                                    Demo.buf[9] = (byte) 0x04;//230红灯
-                                                    Demo.buf[10] = (byte) 0x01;//245黄灯
-                                                    Demo.outMessage(Demo.buf);
-                                                    //提示信息
-                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:02");
-                                                    Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
-                                                    //车闪标识
-                                                    //Demo.carnumber_two_falg = true;
-                                                    Demo.carButton2.setVisible(true);
-                                                }
-                                            }
+                                        if (Demo.yichang200 == false ){
+                                            if (!car.equals(Demo.car_200)){//200进的车往上半区段走了，判断此时下半段的车是进车出车
+                                                if (Demo.map.size()==1){
+                                                    if (car.equals(Demo.map.get(2))){//出车，此时200进的车还没从上半段出去
+                                                        Demo.map.remove(2);
+                                                        //Demo.carnumber_two_falg = false;
+                                                        Demo.carButton2.setVisible(false);
+                                                        // 4,5,6变绿灯
+                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton4.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton5.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton6.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[8] = (byte) 0x02;//215绿灯
+                                                        Demo.buf[9] = (byte) 0x02;//230绿灯
+                                                        Demo.buf[10] = (byte) 0x02;//245绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                        //提示信息
+                                                        Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                        Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                    }else{
+                                                        System.out.println("200和下半段已经进车，请退至等候区等待下次识别！");
+                                                    }
+                                                }else{//进车
+                                                    if (Demo.yichang200_top == true ){
+                                                        Demo.map.put(2, dncodeHex((int) buffer[7]));
+                                                        //判断是215、230、245
+                                                        if (buffer[4] == 16) {//如果是245 245黄灯亮 200， 215、230红灯
+                                                            Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton3.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton4.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton4.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton5.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton5.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                            Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                            Demo.greenButton6.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton6.setIcon(Demo.YellowIcon);
+                                                            Demo.redButton_200south.setIcon(Demo.RedIcon);
+                                                            Demo.greenButton_200south.setIcon(Demo.GrayIcon);
+                                                            Demo.yellowButton_200south.setIcon(Demo.GrayIcon);
+                                                            //输出控制信号灯
+                                                            Demo.buf[7] = (byte) 0x61;//200上绿灯 200下红灯 200黄灯
+                                                            Demo.buf[8] = (byte) 0x04;//215红灯
+                                                            Demo.buf[9] = (byte) 0x04;//230红灯
+                                                            Demo.buf[10] = (byte) 0x01;//245黄灯
+                                                            Demo.outMessage(Demo.buf);
+                                                            //提示信息
+                                                            Demo.car_numberJB.setText("当前巷道中车辆数量:02");
+                                                            Demo.carId_south.setText("车辆编号"+car+"从-245处驶入");
+                                                            //车闪标识
+                                                            //Demo.carnumber_two_falg = true;
+                                                            Demo.carButton2.setVisible(true);
+                                                        }
+                                                    }
+                                                    }
 
-                                        }
-                                        if (car.equals(Demo.car_200)){//说明从200进的车要出车
-                                            Demo.car_200 = "00";
-                                            //车闪标识
-                                            //Demo.carnumber_two_falg = false;
-                                            Demo.carButton2.setVisible(false);
-                                            if (Demo.map.size()==0){//上半段没有车进来 3，4，5，6变绿灯
-                                                Demo.redButton3.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton3.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton3.setIcon(Demo.GrayIcon);
-                                                Demo.redButton4.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton4.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton4.setIcon(Demo.GrayIcon);
-                                                Demo.redButton5.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton5.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton5.setIcon(Demo.GrayIcon);
-                                                Demo.redButton6.setIcon(Demo.GrayIcon);
-                                                Demo.greenButton6.setIcon(Demo.GreenIcon);
-                                                Demo.yellowButton6.setIcon(Demo.GrayIcon);
-                                                //输出控制信号灯
-                                                Demo.buf[7] = (byte) 0x52;//200上绿灯 200下绿灯 200绿灯
-                                                Demo.buf[8] = (byte) 0x02;//215绿灯
-                                                Demo.buf[9] = (byte) 0x02;//230绿灯
-                                                Demo.buf[10] = (byte) 0x02;//245绿灯
-                                                Demo.outMessage(Demo.buf);
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:00");
-                                                Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                            }else{//上半段有车进来
-                                                //提示信息
-                                                Demo.car_numberJB.setText("当前巷道中车辆数量:01");
-                                                Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
-                                                if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
-                                                    Demo.redButton3.setIcon(Demo.RedIcon);
-                                                    Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                            }
+                                            if (car.equals(Demo.car_200)){//说明从200进的车要出车
+                                                Demo.car_200 = "00";
+                                                Demo.yichang200 = false;
+                                                Demo.yichang200_top =false;
+                                                Demo.yichang200_south =false;
+                                                //车闪标识
+                                                //Demo.carnumber_two_falg = false;
+                                                Demo.carButton2.setVisible(false);
+                                                if (Demo.map.size()==0){//上半段没有车进来 3，4，5，6变绿灯
+                                                    Demo.redButton3.setIcon(Demo.GrayIcon);
+                                                    Demo.greenButton3.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton3.setIcon(Demo.GrayIcon);
                                                     Demo.redButton4.setIcon(Demo.GrayIcon);
                                                     Demo.greenButton4.setIcon(Demo.GreenIcon);
@@ -4502,14 +4019,44 @@ class input_one extends Thread {
                                                     Demo.greenButton6.setIcon(Demo.GreenIcon);
                                                     Demo.yellowButton6.setIcon(Demo.GrayIcon);
                                                     //输出控制信号灯
-                                                    Demo.buf[7] = (byte) 0x94;//200上红灯 200下绿灯 200红灯
+                                                    Demo.buf[7] = (byte) 0x52;//200上绿灯 200下绿灯 200绿灯
                                                     Demo.buf[8] = (byte) 0x02;//215绿灯
                                                     Demo.buf[9] = (byte) 0x02;//230绿灯
                                                     Demo.buf[10] = (byte) 0x02;//245绿灯
                                                     Demo.outMessage(Demo.buf);
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:00");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                }else{//上半段有车进来
+                                                    //提示信息
+                                                    Demo.car_numberJB.setText("当前巷道中车辆数量:01");
+                                                    Demo.carId_south.setText("车辆编号"+car+"从下半段驶离");
+                                                    if (!Demo.car_200top){//上半段的车还没经过200a ，变绿灯
+                                                        Demo.redButton3.setIcon(Demo.RedIcon);
+                                                        Demo.greenButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.yellowButton3.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton4.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton4.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton5.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton5.setIcon(Demo.GrayIcon);
+                                                        Demo.redButton6.setIcon(Demo.GrayIcon);
+                                                        Demo.greenButton6.setIcon(Demo.GreenIcon);
+                                                        Demo.yellowButton6.setIcon(Demo.GrayIcon);
+                                                        //输出控制信号灯
+                                                        Demo.buf[7] = (byte) 0x94;//200上红灯 200下绿灯 200红灯
+                                                        Demo.buf[8] = (byte) 0x02;//215绿灯
+                                                        Demo.buf[9] = (byte) 0x02;//230绿灯
+                                                        Demo.buf[10] = (byte) 0x02;//245绿灯
+                                                        Demo.outMessage(Demo.buf);
+                                                    }
                                                 }
                                             }
+                                        }else{
+                                            System.out.println("闯红灯，请退至等候区等待下次识别！");
                                         }
+
                                     }
                                     Demo.chongfu245_1 = dncodeHex((int) buffer[4]);
                                     Demo.chongfu245_2 = dncodeHex((int) buffer[5]);
